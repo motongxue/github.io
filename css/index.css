@@ -1953,8 +1953,6 @@ kbd {
 }
 .highlight pre {
   margin: 0;
-  white-space: pre-wrap;
-  counter-reset: line;
 }
 .highlight td {
   border-width: 0;
@@ -1996,7 +1994,6 @@ kbd {
   padding: 0.4rem 0.6rem;
   width: 2rem;
   background-color: var(--color-gray-250);
-  display: none;
 }
 .highlight td.gutter pre {
   text-align: right;
@@ -2005,21 +2002,7 @@ kbd {
   background-color: inherit;
 }
 .highlight td.code {
-  padding: 0;
-}
-.highlight .line::before {
-  content: counter(line);
-  display: inline-block;
-  margin-right: 0.5rem;
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  padding: 0 0.8rem 0 0.4rem;
-  min-width: 1rem;
-  text-align: right;
-  color: var(--color-gray-600);
-  background-color: var(--color-gray-250);
-  counter-increment: line;
+  padding: 0.5rem 0.6rem;
 }
 .highlight .marked {
   background-color: var(--color-gray-300);
@@ -2167,7 +2150,6 @@ kbd {
   padding: 1rem 0 0;
   text-align: center;
   color: var(--color-gray-400);
-  border-top: 1px dashed var(--color-gray-300);
 }
 .copyright {
   position: relative;
