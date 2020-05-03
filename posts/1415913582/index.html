@@ -1,0 +1,474 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="renderer" content="webkit"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="32x32"><meta name="description" content="工具使用 | Git 笔记       @[toc]                     1、git提交文件到仓库——多次add,一次commit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工具使用-Git笔记">
+<meta property="og:url" content="https://motongxue.gitee.io/posts/1415913582/index.html">
+<meta property="og:site_name" content="Motongxue&#39;s Blog">
+<meta property="og:description" content="工具使用 | Git 笔记       @[toc]                     1、git提交文件到仓库——多次add,一次commit">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-03T09:52:58.492Z">
+<meta property="article:modified_time" content="2020-05-03T09:54:23.677Z">
+<meta property="article:author" content="Motongxue">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="工具">
+<meta name="twitter:card" content="summary"><meta name="keywords" content="Motongxue, Motongxue's Blog"><meta name="description" content=""><title>工具使用-Git笔记 | Motongxue's Blog</title><link ref="canonical" href="https://motongxue.gitee.io/posts/1415913582/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0-rc.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/mytech/"><span class="header-nav-menu-item__icon"><i class="fas fa-feather-alt"></i></span><span class="header-nav-menu-item__text">技术</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/mylife/"><span class="header-nav-menu-item__icon"><i class="fas fa-book"></i></span><span class="header-nav-menu-item__text">生活</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">文章</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/archives/"><span class="header-nav-submenu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-submenu-item__text">归档</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/tags/"><span class="header-nav-submenu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-submenu-item__text">标签</span></a></div></div></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Motongxue's Blog</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">工具使用-Git笔记</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-05-03</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-05-03</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">4.2k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">29分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="工具使用-Git-笔记"   >
+          <a href="#工具使用-Git-笔记" class="heading-link"><i class="fas fa-link"></i></a>工具使用 | Git 笔记</h1>
+      <p>@[toc]</p>
+
+        <h2 id="1、git提交文件到仓库——多次add-一次commit"   >
+          <a href="#1、git提交文件到仓库——多次add-一次commit" class="heading-link"><i class="fas fa-link"></i></a>1、git提交文件到仓库——多次add,一次commit</h2>
+      <a id="more"></a>
+<p>为什么Git添加文件需要add，commit一共两步呢？因为commit可以一次提交很多文件，所以你可以多次add不同的文件，比如：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add file1.txt</span><br><span class="line">git add file2.txt file3.txt</span><br><span class="line">git commit -m "add 3 files."</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>小结</strong></p>
+<p>现在总结一下今天学的两点内容：</p>
+<p>初始化一个Git仓库，使用git init命令。</p>
+<p>添加文件到Git仓库，分两步：</p>
+<p>使用命令git add ，注意，可反复多次使用，添加多个文件；</p>
+<p>使用命令git commit -m ，完成。</p>
+<hr>
+
+        <h2 id="2、当本地修改了文件时候，如何提交与版本控制"   >
+          <a href="#2、当本地修改了文件时候，如何提交与版本控制" class="heading-link"><i class="fas fa-link"></i></a>2、当本地修改了文件时候，如何提交与版本控制</h2>
+      <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git status #查看当前状态</span><br><span class="line">git diff readme.txt # 查看文件readme.txt哪几行发生了增减</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>小结</strong></p>
+<p>要随时掌握工作区的状态，使用git status命令。</p>
+<p>如果git status告诉你有文件被修改过，用git diff可以查看修改内容。</p>
+<hr>
+
+        <h2 id="3、穿梭未来–回到过去"   >
+          <a href="#3、穿梭未来–回到过去" class="heading-link"><i class="fas fa-link"></i></a>3、穿梭未来–回到过去</h2>
+      <p><code>HEAD</code>指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令<code>git reset --hard commit_id</code>。</p>
+<p>穿梭前，用<code>git log</code>可以查看提交历史，以便确定要回退到哪个版本。</p>
+<p>要重返未来，用<code>git reflog</code>查看命令历史，以便确定要回到未来的哪个版本。</p>
+<hr>
+
+        <h2 id="4、git工作区与缓存区"   >
+          <a href="#4、git工作区与缓存区" class="heading-link"><i class="fas fa-link"></i></a>4、git工作区与缓存区</h2>
+      <p>工作区是当前的目录，缓冲区是可以保存多次文件修改的地方，使用<code>git add &lt;file&gt;</code>将工作区的修改内容提交到缓冲区。</p>
+<p>版本库是<code>.git</code>文件，利用<code>git commit -m &quot;comment&quot;</code>可以将缓冲区的所有修改一次性全部提交到版本库<code>.git</code>中。</p>
+<p>在Git中，用<code>HEAD</code>表示版本库当前版本，也就是最新的提交<code>1094adb...</code><br>(<strong>实际上HEAD指向的master分支，master指向最新的一次提交1094adb…</strong>)，注意我的提交ID和你的肯定不一样，上一个版本就是<code>HEAD^</code>，上上一个版本就是<code>HEAD^^</code>，当然往上100个版本写100个^比较容易数不过来，所以写成<code>HEAD~100</code>。</p>
+<hr>
+
+        <h2 id="5、管理修改"   >
+          <a href="#5、管理修改" class="heading-link"><i class="fas fa-link"></i></a>5、管理修改</h2>
+      <p>用<code>git diff HEAD -- readme.txt</code>命令可以查看版本库里面最新版本和工作区的区别</p>
+<p><strong>小结</strong></p>
+<p>第一次修改 -&gt; <code>git add</code>-&gt; 第二次修改 -&gt; <code>git add</code>-&gt; <code>git commit</code><br>好，现在，把第二次修改提交了，</p>
+<p>然后开始小结。<br>理解了Git是如何跟踪修改的，每次修改，如果不用git add到暂存区，那就不会加入到commit中。</p>
+<hr>
+
+        <h2 id="6、撤销修改"   >
+          <a href="#6、撤销修改" class="heading-link"><i class="fas fa-link"></i></a>6、撤销修改</h2>
+      <p>命令<code>git checkout -- readme.txt</code>意思就是，把<code>readme.txt</code>文件在工作区的修改全部撤销，这里有两种情况：</p>
+<p>一种是<code>readme.txt</code>自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库<span class="exturl"><a class="exturl__link"   href="https://www.baidu.com/s?wd=%E4%B8%80%E6%A8%A1%E4%B8%80%E6%A0%B7&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd"  target="_blank" rel="noopener">一模一样</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>的状态；</p>
+<p>一种是<code>readme.txt</code>已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。</p>
+<p>总之，就是让这个文件回到最近一次<code>git commit</code>或<code>git add</code>时的状态。</p>
+<p><strong>小结</strong></p>
+<p><code>git checkout -- file</code>命令中的<code>--</code>很重要，没有<code>--</code>，就变成了“切换到另一个分支”的命令，我们在后面的分支管理中会再次遇到git <code>checkout</code>命令。</p>
+<hr>
+
+        <h2 id="7、删除本地文件后如何与版本库同步"   >
+          <a href="#7、删除本地文件后如何与版本库同步" class="heading-link"><i class="fas fa-link"></i></a>7、删除本地文件后如何与版本库同步</h2>
+      <p>现在你有两个选择，一是确实要从版本库中删除该文件，那就用命令<code>git rm</code>删掉，并且<code>git commit</code>：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git rm test.txt</span></span><br><span class="line">rm 'test.txt'</span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">"remove test.txt"</span></span></span><br><span class="line">[master d46f35e] remove test.txt</span><br><span class="line"> 1 file changed, 1 deletion(-)</span><br><span class="line"> delete mode 100644 test.txt</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>小结</strong></p>
+<p>命令<code>git rm &lt;file&gt;</code>用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。</p>
+<hr>
+
+        <h2 id="8、远程仓库"   >
+          <a href="#8、远程仓库" class="heading-link"><i class="fas fa-link"></i></a>8、远程仓库</h2>
+      <p><strong>1.添加远程库</strong></p>
+<p>要将<strong>本地的版本库</strong>关联一个<strong>远程库(一般用origin表示远程库)</strong>，使用命令<code>git remote add origin git@server-name:path/repo-name.git</code>；</p>
+<p>关联后，使用命令<code>git push -u origin master</code>第一次推送本地版本库<code>master</code>分支的所有内容；</p>
+<p>说明：我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。</p>
+<p>此后，每次本地提交后，只要有必要，就可以使用命令<code>git push origin master</code>推送最新修改。</p>
+<p><strong>2.从远程库克隆</strong></p>
+<p>Git支持多种协议，包括<code>https</code>，但通过<code>ssh</code>支持的原生<code>git</code>协议速度最快。</p>
+<p>如：<code>git clone git@github.com:michaelliao/gitskills.git</code>即可。</p>
+<hr>
+
+        <h2 id="9、分支管理"   >
+          <a href="#9、分支管理" class="heading-link"><i class="fas fa-link"></i></a>9、分支管理</h2>
+      <p><strong>1.创建与合并分支</strong></p>
+<p>首先，我们创建dev分支，然后切换到dev分支：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b dev</span><br><span class="line"></span><br><span class="line">Switched to a new branch 'dev'</span><br><span class="line"></span><br><span class="line">git checkout命令加上-b参数表示创建并切换，相当于以下两条命令：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch dev</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout dev</span></span><br><span class="line">Switched to branch 'dev'</span><br><span class="line">然后，用git branch命令查看当前分支：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch</span></span><br><span class="line">* dev</span><br><span class="line">  master</span><br><span class="line">git branch命令会列出所有分支，当前分支前面会标一个*号。</span><br><span class="line"></span><br><span class="line">然后，我们就可以在dev分支上正常提交，比如对readme.txt做个修改，加上一行：</span><br><span class="line">Creating a new branch is quick.</span><br><span class="line"></span><br><span class="line">然后提交：</span><br><span class="line"><span class="meta">$</span><span class="bash"> git add readme.txt </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">"branch test"</span></span></span><br><span class="line">[dev b17d20e] branch test</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> </span><br><span class="line">现在，dev分支的工作完成，我们就可以切换回master分支：</span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout master</span></span><br><span class="line">Switched to branch 'master'</span><br><span class="line"></span><br><span class="line">切换回master分支后，再查看一个readme.txt文件，刚才添加的内容不见了！因为那个提交是在dev分支上，而master分支此刻的提交点并没有变：</span><br><span class="line"></span><br><span class="line">现在，我们把dev分支的工作成果合并到master分支上：</span><br><span class="line"><span class="meta">$</span><span class="bash"> git merge dev</span></span><br><span class="line">Updating d46f35e..b17d20e</span><br><span class="line">Fast-forward</span><br><span class="line"> readme.txt | 1 +</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line">git merge命令用于合并指定分支到当前分支。合并后，再查看readme.txt的内容，就可以看到，和dev分支的最新提交是完全一样的。</span><br><span class="line"></span><br><span class="line">注意到上面的Fast-forward信息，Git告诉我们，这次合并是“快进模式”，也就是直接把master指向dev的当前提交，所以合并速度非常快。</span><br><span class="line"></span><br><span class="line">当然，也不是每次合并都能Fast-forward，我们后面会讲其他方式的合并。</span><br><span class="line"></span><br><span class="line">合并完成后，就可以放心地删除dev分支了：</span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -d dev</span></span><br><span class="line">Deleted branch dev (was b17d20e).</span><br><span class="line">删除后，查看branch，就只剩下master分支了：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch</span></span><br><span class="line">* master</span><br><span class="line">因为创建、合并和删除分支非常快，所以Git鼓励你使用分支完成某个任务，合并后再删掉分支，这和直接在master分支上工作效果是一样的，但过程更安全。</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>小结</strong></p>
+<p>Git鼓励大量使用分支：</p>
+<p>查看分支：<code>git branch</code></p>
+<p>创建分支：<code>git branch &lt;name&gt;</code></p>
+<p>切换分支：<code>git checkout &lt;name&gt;</code></p>
+<p>创建+切换分支：<code>git checkout -b &lt;name&gt;</code></p>
+<p>合并某分支到当前分支：<code>git merge &lt;name&gt;</code></p>
+<p>删除分支：<code>git branch -d &lt;name&gt;</code></p>
+<hr>
+<p><strong>2.解决冲突</strong></p>
+<p>我们可以直接查看readme.txt的内容：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Git is a distributed version control system.</span><br><span class="line">Git is free software distributed under the GPL.</span><br><span class="line">Git has a mutable index called stage.</span><br><span class="line">Git tracks changes of files.</span><br><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span><br><span class="line">Creating a new branch is quick &amp; simple.</span><br><span class="line">=======</span><br><span class="line">Creating a new branch is quick AND simple.</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt;&gt;&gt;&gt;&gt; feature1</span></span><br></pre></td></tr></table></div></figure>
+
+<p>Git用<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;，=======，&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>标记出不同分支的内容，我们修改如下后保存：</p>
+<p><code>Creating a new branch is quick and simple.</code></p>
+<p>再提交：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git add readme.txt </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">"conflict fixed"</span></span></span><br><span class="line">[master cf810e4] conflict fixed</span><br></pre></td></tr></table></div></figure>
+
+<p>现在，master分支和feature1分支使用下面命令查看：<br><code>git log --graph --pretty=oneline --abbrev-commit</code></p>
+<p>或者是<code>git log --graph</code>查看解决矛盾图。</p>
+<hr>
+<p><strong>3.分支合并策略</strong></p>
+<p><code>--no-ff</code>表示普通合并，合并后可以看得到分支，而 fast-farwaef模式看不到分支，</p>
+<p>格式：<code>git merge --no-ff -m &quot;merge with no-ff&quot; dev</code></p>
+<hr>
+<p><strong>4.bug分支</strong></p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">Bug分支</span><br><span class="line">软件开发中，bug就像家常便饭一样。有了bug就需要修复，在Git中，由于分支是如此的强大，所以，每个bug都可以通过一个新的临时分支来修复，修复后，合并分支，然后将临时分支删除。</span><br><span class="line"></span><br><span class="line">当你接到一个修复一个代号101的bug的任务时，很自然地，你想创建一个分支issue-101来修复它，但是，等等，当前正在dev上进行的工作还没有提交：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">On branch dev</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use "git reset HEAD &lt;file&gt;..." to unstage)</span><br><span class="line">    new file:   hello.py</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use "git add &lt;file&gt;..." to update what will be committed)</span><br><span class="line">  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span><br><span class="line"></span><br><span class="line">    modified:   readme.txt</span><br><span class="line">并不是你不想提交，而是工作只进行到一半，还没法提交，预计完成还需1天时间。但是，必须在两个小时内修复该bug，怎么办？</span><br><span class="line"></span><br><span class="line">幸好，Git还提供了一个stash功能，可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash</span></span><br><span class="line">Saved working directory and index state WIP on dev: f52c633 add merge</span><br><span class="line">现在，用git status查看工作区，就是干净的（除非有没有被Git管理的文件），因此可以放心地创建分支来修复bug。</span><br><span class="line"></span><br><span class="line">首先确定要在哪个分支上修复bug，假定需要在master分支上修复，就从master创建临时分支：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout master</span></span><br><span class="line">Switched to branch 'master'</span><br><span class="line">Your branch is ahead of 'origin/master' by 6 commits.</span><br><span class="line">  (use "git push" to publish your local commits)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b issue-101</span></span><br><span class="line">Switched to a new branch 'issue-101'</span><br><span class="line">现在修复bug，需要把“Git is free software ...”改为“Git is a free software ...”，然后提交：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add readme.txt </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">"fix bug 101"</span></span></span><br><span class="line">[issue-101 4c805e2] fix bug 101</span><br><span class="line"> 1 file changed, 1 insertion(+), 1 deletion(-)</span><br><span class="line">修复完成后，切换到master分支，并完成合并，最后删除issue-101分支：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout master</span></span><br><span class="line">Switched to branch 'master'</span><br><span class="line">Your branch is ahead of 'origin/master' by 6 commits.</span><br><span class="line">  (use "git push" to publish your local commits)</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git merge --no-ff -m <span class="string">"merged bug fix 101"</span> issue-101</span></span><br><span class="line">Merge made by the 'recursive' strategy.</span><br><span class="line"> readme.txt | 2 +-</span><br><span class="line"> 1 file changed, 1 insertion(+), 1 deletion(-)</span><br><span class="line">太棒了，原计划两个小时的bug修复只花了5分钟！现在，是时候接着回到dev分支干活了！</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout dev</span></span><br><span class="line">Switched to branch 'dev'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">On branch dev</span><br><span class="line">nothing to commit, working tree clean</span><br><span class="line">工作区是干净的，刚才的工作现场存到哪去了？用git stash list命令看看：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash list</span></span><br><span class="line">stash@&#123;0&#125;: WIP on dev: f52c633 add merge</span><br><span class="line">工作现场还在，Git把stash内容存在某个地方了，但是需要恢复一下，有两个办法：</span><br></pre></td></tr></table></div></figure>
+
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">一是用git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除；</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">另一种方式是用git stash pop，恢复的同时把stash内容也删了：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash pop</span></span><br><span class="line">On branch dev</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use "git reset HEAD &lt;file&gt;..." to unstage)</span><br><span class="line"></span><br><span class="line">    new file:   hello.py</span><br><span class="line"></span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use "git add &lt;file&gt;..." to update what will be committed)</span><br><span class="line">  (use "git checkout -- &lt;file&gt;..." to discard changes in working directory)</span><br><span class="line"></span><br><span class="line">    modified:   readme.txt</span><br><span class="line"></span><br><span class="line">Dropped refs/stash@&#123;0&#125; (5d677e2ee266f39ea296182fb2354265b91b3b2a)</span><br><span class="line">再用git stash list查看，就看不到任何stash内容了：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash list</span></span><br><span class="line">你可以多次stash，恢复的时候，先用git stash list查看，然后恢复指定的stash，用命令：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash apply stash@&#123;0&#125;</span></span><br></pre></td></tr></table></div></figure>
+
+<ul>
+<li>​</li>
+</ul>
+<p><strong>小结</strong></p>
+<p>修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；</p>
+<p>当手头工作没有完成时，先把工作现场<code>git stash</code>一下，然后去修复bug，修复后，再<code>git stash pop</code>，</p>
+<hr>
+<p><strong>5.feature 分支</strong></p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">添加一个新功能时，你肯定不希望因为一些实验性质的代码，把主分支搞乱了，所以，每添加一个新功能，最好新建一个feature分支，在上面开发，完成后，合并，最后，删除该feature分支。</span><br><span class="line"></span><br><span class="line">现在，你终于接到了一个新任务：开发代号为Vulcan的新功能，该功能计划用于下一代星际飞船。</span><br><span class="line"></span><br><span class="line">于是准备开发：~~++*此时我们是在dev分支上进行的开发*++~~。</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b feature-vulcan</span></span><br><span class="line">Switched to a new branch 'feature-vulcan'</span><br><span class="line">5分钟后，开发完毕：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add vulcan.py</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">On branch feature-vulcan</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use "git reset HEAD &lt;file&gt;..." to unstage)</span><br><span class="line">  </span><br><span class="line">    new file:   vulcan.py</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m <span class="string">"add feature vulcan"</span></span></span><br><span class="line">[feature-vulcan 287773e] add feature vulcan</span><br><span class="line"> 1 file changed, 2 insertions(+)</span><br><span class="line"> create mode 100644 vulcan.py</span><br><span class="line">切回dev，准备合并：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout dev</span></span><br><span class="line">一切顺利的话，feature分支和bug分支是类似的，合并，然后删除。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">但是！</span><br><span class="line"></span><br><span class="line">就在此时，接到上级命令，因经费不足，新功能必须取消！</span><br><span class="line">虽然白干了，但是这个包含机密资料的分支还是必须就地销毁：</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -d feature-vulcan</span></span><br><span class="line">error: The branch 'feature-vulcan' is not fully merged.</span><br><span class="line">If you are sure you want to delete it, run 'git branch -D feature-vulcan'.</span><br><span class="line">销毁失败。Git友情提醒，feature-vulcan分支还没有被合并，如果删除，将丢失掉修改，如果要强行删除，需要使用大写的-D参数。。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">现在我们强行删除：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -D feature-vulcan</span></span><br><span class="line">Deleted branch feature-vulcan (was 287773e).</span><br><span class="line">终于删除成功！</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>小结</strong></p>
+<p>开发一个新<code>feature</code>，最好新建一个分支；</p>
+<p>如果要丢弃一个没有被合并过的分支，可以通过<code>git branch -D &lt;name&gt;</code>强行删除。</p>
+<hr>
+
+        <h2 id="10、多人协作"   >
+          <a href="#10、多人协作" class="heading-link"><i class="fas fa-link"></i></a>10、多人协作</h2>
+      <p>多人协作的工作模式通常是这样：</p>
+<p>1.首先，可以试图用<code>git push origin &lt;branch-name&gt;</code>推送自己的修改；</p>
+<p>2如果推送失败，则因为远程分支比你的本地更新，需要先用<code>git pull</code>试图合并；</p>
+<p>3如果合并有冲突，则解决冲突，并在本地提交；</p>
+<p>4没有冲突或者解决掉冲突后，再用git push origin 推送就能成功！</p>
+<p>如果git pull提示no tracking information，则说明本地分支和远程分支的链接关系没有创建，用命令git branch –set-upstream-to origin/。</p>
+<p>这就是多人协作的工作模式，一旦熟悉了，就非常简单。</p>
+<p><strong>小结</strong></p>
+<p>1查看远程库信息，使用<code>git remote -v</code>；</p>
+<p>2本地新建的分支如果不推送到远程，对其他人就是不可见的；</p>
+<p>3从本地推送分支，使用<code>git push origin branch-name</code>，如果推送失败，先用<code>git pull</code>抓取远程的新提交；</p>
+<p>4在本地创建和远程分支对应的分支，使用<code>git checkout -b branch-name origin/branch-name</code>，本地和远程分支的名称最好一致；</p>
+<p>5建立本地分支和远程分支的关联，使用<code>git branch --set-upstream branch-name origin/branch-name</code>；</p>
+<p>6从远程抓取分支，使用<code>git pull</code>，如果有冲突，要先处理冲突。</p>
+<hr>
+
+        <h2 id="11、多人协作-rebase"   >
+          <a href="#11、多人协作-rebase" class="heading-link"><i class="fas fa-link"></i></a>11、多人协作-rebase</h2>
+      <p><span class="exturl"><a class="exturl__link"   href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0015266568413773c73cdc8b4ab4f9aa9be10ef3078be3f000"  target="_blank" rel="noopener">link</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p><strong>小结</strong></p>
+<p>rebase操作可以把本地未push的分叉提交历史整理成直线；</p>
+<p>rebase的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要三方对比</p>
+<hr>
+
+        <h2 id="12、打tag以及修改tag"   >
+          <a href="#12、打tag以及修改tag" class="heading-link"><i class="fas fa-link"></i></a>12、打tag以及修改tag</h2>
+      <p><strong>1.打标签tag</strong></p>
+<p>命令<code>git tag &lt;tagname&gt;</code>用于新建一个标签，默认为HEAD，也可以指定一个<code>commit id</code>；</p>
+<p>命令<code>git tag -a &lt;tagname&gt; -m &quot;blablabla...&quot;</code>可以指定标签信息；</p>
+<p>命令<code>git tag</code>可以查看所有标签。</p>
+<p>标签不是按时间顺序列出，而是按字母排序的。可以用<code>git show &lt;tagname&gt;</code>查看标签信息。</p>
+<p>注意：标签总是和某个<code>commit</code>挂钩。如果这个<code>commit</code>既出现在````master<code>分支，又出现</code>在dev```分支，那么在这两个分支上都可以看到这个标签.</p>
+<p><strong>2.修改tag</strong></p>
+<p>删除标签 <code>git tag -d v0.1</code></p>
+<p>如果要推送某个标签到远程，使用命令<code>git push origin &lt;tagname&gt;</code>：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git push origin v1.0</span></span><br><span class="line">Total 0 (delta 0), reused 0 (delta 0)</span><br><span class="line">To github.com:michaelliao/learngit.git</span><br><span class="line"> * [new tag]         v1.0 -&gt; v1.0</span><br><span class="line">或者，一次性推送全部尚未推送到远程的本地标签：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin --tags</span></span><br><span class="line">Total 0 (delta 0), reused 0 (delta 0)</span><br><span class="line">To github.com:michaelliao/learngit.git</span><br><span class="line"> * [new tag]         v0.9 -&gt; v0.9</span><br><span class="line">如果标签已经推送到远程，要删除远程标签就麻烦一点，先从本地删除：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag -d v0.9</span></span><br><span class="line">Deleted tag 'v0.9' (was f52c633)</span><br><span class="line">然后，从远程删除。删除命令也是push，但是格式如下：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin :refs/tags/v0.9</span></span><br><span class="line">To github.com:michaelliao/learngit.git</span><br><span class="line"> - [deleted]         v0.9</span><br></pre></td></tr></table></div></figure>
+
+<p>要看看是否真的从远程库删除了标签，可以登陆GitHub查看。</p>
+<p><strong>小结</strong></p>
+<p>命令<code>git push origin &lt;tagname&gt;</code>可以推送一个本地标签；</p>
+<p>命令<code>git push origin --tags</code>可以推送全部未推送过的本地标签；</p>
+<p>命令<code>git tag -d &lt;tagname&gt;</code>可以删除一个本地标签；</p>
+<p>命令<code>git push origin :refs/tags/&lt;tagname&gt;</code>可以删除一个远程标签。</p>
+<hr>
+
+        <h2 id="13、github使用"   >
+          <a href="#13、github使用" class="heading-link"><i class="fas fa-link"></i></a>13、github使用</h2>
+      <p>在GitHub上，可以任意Fork开源仓库；</p>
+<p>自己拥有Fork后的仓库的读写权限；</p>
+<p>可以推送pull request给官方仓库来贡献代码</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://motongxue.gitee.io">Motongxue</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://motongxue.gitee.io/posts/1415913582/">https://motongxue.gitee.io/posts/1415913582/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.gitee.io/tags/Git/">Git</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.gitee.io/tags/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="post-share"><div class="social-share" data-sites="qzone, qq, weibo, wechat, douban, linkedin, facebook, twitter, google">Share to: </div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/posts/1544453252/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">毕向东Java基础</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/posts/2307581756/"><span class="paginator-prev__text">分治 芯片测试</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#工具使用-Git-笔记"><span class="toc-number">1.</span> <span class="toc-text">
+          工具使用 | Git 笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、git提交文件到仓库——多次add-一次commit"><span class="toc-number">1.1.</span> <span class="toc-text">
+          1、git提交文件到仓库——多次add,一次commit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、当本地修改了文件时候，如何提交与版本控制"><span class="toc-number">1.2.</span> <span class="toc-text">
+          2、当本地修改了文件时候，如何提交与版本控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、穿梭未来–回到过去"><span class="toc-number">1.3.</span> <span class="toc-text">
+          3、穿梭未来–回到过去</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、git工作区与缓存区"><span class="toc-number">1.4.</span> <span class="toc-text">
+          4、git工作区与缓存区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、管理修改"><span class="toc-number">1.5.</span> <span class="toc-text">
+          5、管理修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、撤销修改"><span class="toc-number">1.6.</span> <span class="toc-text">
+          6、撤销修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、删除本地文件后如何与版本库同步"><span class="toc-number">1.7.</span> <span class="toc-text">
+          7、删除本地文件后如何与版本库同步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8、远程仓库"><span class="toc-number">1.8.</span> <span class="toc-text">
+          8、远程仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9、分支管理"><span class="toc-number">1.9.</span> <span class="toc-text">
+          9、分支管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10、多人协作"><span class="toc-number">1.10.</span> <span class="toc-text">
+          10、多人协作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11、多人协作-rebase"><span class="toc-number">1.11.</span> <span class="toc-text">
+          11、多人协作-rebase</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12、打tag以及修改tag"><span class="toc-number">1.12.</span> <span class="toc-text">
+          12、打tag以及修改tag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13、github使用"><span class="toc-number">1.13.</span> <span class="toc-text">
+          13、github使用</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/Motongxue.png" alt="avatar"></div><p class="sidebar-ov-author__text">你来了，要不要坐下来喝杯茶？</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://blog.csdn.net/CrazyMooo" target="_blank" rel="noopener" data-popover="social.csdn" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">csdn</span></a><a class="sidebar-ov-social-item" href="393888412" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-email"><a class="sidebar-ov-feed-email__link" href="http://moweichuan@foxmail.com" target="_blank" rel="noopener"><span class="sidebar-ov-feed-email__icon"><i class="fas fa-envelope"></i></span><span>Email 订阅</span></a></span></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Motongxue</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div><div>我抓不住世间的美好，只好装作万事顺遂的样子</div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><script>function initSearch() {
+  var isXML = true;
+  var search_path = 'search.json';
+
+  if (!search_path) {
+    search_path = 'search.xml';
+  } else if (/json$/i.test(search_path)) {
+    isXML = false;
+  }
+
+  var path = '/' + search_path;
+  $.ajax({
+    url: path,
+    dataType: isXML ? 'xml' : 'json',
+    async: true,
+    success: function (res) {
+      var datas = isXML ? $('entry', res).map(function () {
+        // 将 XML 转为 JSON
+        return {
+          title: $('title', this).text(),
+          content: $('content', this).text(),
+          url: $('url', this).text()
+        };
+      }).get() : res;
+      var $input = $('.search-input input');
+      var $result = $('.search-results');
+      // 搜索对象（标题、内容）的权重，影响显示顺序
+      var WEIGHT = { title: 100, content: 1 };
+      var searchPost = function () {
+        var searchText = $input.val().toLowerCase().trim();
+        // 根据空白字符分隔关键字
+        var keywords = searchText.split(/[\s]+/);
+        // 搜索结果
+        var matchPosts = [];
+
+        // 有多个关键字时，将原文字整个保存下来
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        // 防止未输入字符时搜索
+        if (searchText.length > 0) {
+          datas.forEach(function (data) {
+            var isMatch  = false;
+            // 没有标题的文章使用预设的 i18n 变量代替
+            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
+            var titleLower = title && title.toLowerCase();
+            // 删除 HTML 标签 和 所有空白字符
+            var content = data.content && data.content.replace(/<[^>]+>/g, '');
+            var contentLower = content && content.toLowerCase();
+            // 删除重复的 /
+            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
+            // 标题中匹配到的关键词
+            var titleHitSlice = [];
+            // 内容中匹配到的关键词
+            var contentHitSlice = [];
+
+            keywords.forEach(function (keyword) {
+              /**
+              * 获取匹配的关键词的索引
+              * @param {String} keyword 要匹配的关键字
+              * @param {String} text 原文字
+              * @param {Boolean} caseSensitive 是否区分大小写
+              * @param {Number} weight 匹配对象的权重。权重大的优先显示
+              * @return {Array}
+              */
+              function getIndexByword (word, text, caseSensitive, weight) {
+                if (!word || !text) {
+                  return [];
+                };
+
+                var startIndex = 0; // 每次匹配的开始索引
+                var index = -1;     // 匹配到的索引值
+                var result = [];    // 匹配结果
+
+                if (!caseSensitive) {
+                  word = word.toLowerCase();
+                  text = text.toLowerCase();
+                }
+
+                while((index = text.indexOf(word, startIndex)) !== -1) {
+                  var hasMatch = false;
+                  // 索引位置相同的关键词，保留长度较长的
+                  titleHitSlice.forEach(function (hit) {
+                    if (hit.index === index && hit.word.length < word.length) {
+                      hit.word = word;
+                      hasMatch = true;
+                    }
+                  });
+                  startIndex = index + word.length;
+                  !hasMatch && result.push({ index: index, word: word, weight: weight });
+                }
+                return result;
+              }
+              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
+              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
+            });
+
+            var hitTitle = titleHitSlice.length;
+            var hitContent = contentHitSlice.length;
+
+            if (hitTitle > 0 || hitContent > 0) {
+              isMatch = true;
+            }
+            if (isMatch) {
+              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
+                // 按照匹配文字的索引的递增顺序排序
+                hit.sort(function (left, right) {
+                  return left.index - right.index;
+                });
+              });
+              /**
+              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
+              * @param {String} text 原文本
+              * @param {Array} hitSlice 匹配项的索引信息
+              * @param {Number} start 开始索引
+              * @param {Number} end 结束索引
+              * @return {String}
+              */
+              function highlightKeyword (text, hitSlice, start, end) {
+                if (!text || !hitSlice || !hitSlice.length) {
+                  return;
+                }
+
+                var result = '';
+                var startIndex = start;
+                var endIndex = end;
+                hitSlice.forEach(function (hit) {
+                  if (hit.index < startIndex) {
+                    return;
+                  }
+
+                  var hitWordEnd = hit.index + hit.word.length;
+                  result += text.slice(startIndex, hit.index);
+                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
+                  startIndex = hitWordEnd;
+                });
+                result += text.slice(startIndex, endIndex);
+                return result;
+              }
+
+              var postData = {};
+              // 文章总的搜索权重
+              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
+              // 标记匹配关键词后的标题
+              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
+              // 标记匹配关键词后的内容
+              var postContent;
+              // 显示内容的长度
+              var SHOW_WORD_LENGTH = 200;
+              // 命中关键词前的字符显示长度
+              var SHOW_WORD_FRONT_LENGTH = 20;
+              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+
+              // 截取匹配的第一个字符，前后共 200 个字符来显示
+              if (contentHitSlice.length > 0) {
+                var firstIndex = contentHitSlice[0].index;
+                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
+                var end = firstIndex + SHOW_WORD_END_LENGTH;
+                postContent = highlightKeyword(content, contentHitSlice, start, end);
+              } else { // 未匹配到内容，直接截取前 200 个字符来显示
+                postContent = content.slice(0, SHOW_WORD_LENGTH);
+              }
+              postData.title = postTitle;
+              postData.content = postContent;
+              postData.url = postURL;
+              postData.weight = postWeight;
+              matchPosts.push(postData);
+            }
+          });
+        }
+
+        var resultInnerHtml = '';
+        if (matchPosts.length) {
+          // 按权重递增的顺序排序，使权重大的优先显示
+          matchPosts.sort(function (left, right) {
+            return right.weight - left.weight;
+          });
+          resultInnerHtml += '<ul>';
+          matchPosts.forEach(function (post) {
+            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
+            resultInnerHtml += post.title;
+            resultInnerHtml += '</a><div class="search-results-content">';
+            resultInnerHtml += post.content;
+            resultInnerHtml += '</div></li>';
+          });
+          resultInnerHtml += '</ul>';
+        } else {
+          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
+        }
+        $result.html(resultInnerHtml);
+      };
+      $input.on('input', searchPost);
+      $input.on('keyup', function (e) {
+        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
+          searchPost();
+        }
+      });
+    }
+  });
+}
+
+function closeSearch () {
+  $('body').css({ overflow: 'auto' });
+  $('.search-popup').css({ display: 'none' });
+  $('.search-mask').css({ display: 'none' });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  Stun.utils.pjaxReloadLocalSearch = function () {
+    $('.header-nav-search').on('click', function (e) {
+      e.stopPropagation();
+      $('body').css('overflow', 'hidden');
+      $('.search-popup')
+        .velocity('stop')
+        .velocity('transition.expandIn', {
+          duration: 300,
+          complete: function () {
+            $('.search-popup input').focus();
+          }
+        });
+      $('.search-mask')
+        .velocity('stop')
+        .velocity('transition.fadeIn', {
+          duration: 300
+        });
+
+      initSearch();
+    });
+    $('.search-mask, .search-close').on('click', function () {
+      closeSearch();
+    });
+    $(document).on('keydown', function (e) {
+      // Escape <=> 27
+      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
+        closeSearch();
+      }
+    });
+  };
+
+  Stun.utils.pjaxReloadLocalSearch();
+}, false);</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.0.0-rc.0"></script><script src="/js/stun-boot.js?v=2.0.0-rc.0"></script><script src="/js/scroll.js?v=2.0.0-rc.0"></script><script src="/js/header.js?v=2.0.0-rc.0"></script><script src="/js/sidebar.js?v=2.0.0-rc.0"></script></body></html>

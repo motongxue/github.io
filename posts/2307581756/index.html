@@ -1,0 +1,414 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="renderer" content="webkit"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="32x32"><meta name="description" content="1. 芯片测试       在讲解具体的芯片测试的分治策略算法之前，先来了芯片测试的意思">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分治 芯片测试">
+<meta property="og:url" content="https://motongxue.gitee.io/posts/2307581756/index.html">
+<meta property="og:site_name" content="Motongxue&#39;s Blog">
+<meta property="og:description" content="1. 芯片测试       在讲解具体的芯片测试的分治策略算法之前，先来了芯片测试的意思">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200429173027710.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200429173041111.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200429173514882.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200429173538122.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NyYXp5TW9vbw==,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2020-05-03T09:51:52.013Z">
+<meta property="article:modified_time" content="2020-05-03T09:56:38.026Z">
+<meta property="article:author" content="Motongxue">
+<meta property="article:tag" content="快速幂">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200429173027710.png"><meta name="keywords" content="Motongxue, Motongxue's Blog"><meta name="description" content=""><title>分治 芯片测试 | Motongxue's Blog</title><link ref="canonical" href="https://motongxue.gitee.io/posts/2307581756/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0-rc.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/mytech/"><span class="header-nav-menu-item__icon"><i class="fas fa-feather-alt"></i></span><span class="header-nav-menu-item__text">技术</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/mylife/"><span class="header-nav-menu-item__icon"><i class="fas fa-book"></i></span><span class="header-nav-menu-item__text">生活</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">文章</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/archives/"><span class="header-nav-submenu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-submenu-item__text">归档</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/tags/"><span class="header-nav-submenu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-submenu-item__text">标签</span></a></div></div></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Motongxue's Blog</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">分治 芯片测试</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-05-03</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-05-03</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">2.1k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">14分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="1-芯片测试"   >
+          <a href="#1-芯片测试" class="heading-link"><i class="fas fa-link"></i></a>1. 芯片测试</h1>
+      <p>在讲解具体的芯片测试的分治策略算法之前，先来了芯片测试的意思</p>
+<a id="more"></a>
+
+        <h2 id="1-1-一次测试的过程"   >
+          <a href="#1-1-一次测试的过程" class="heading-link"><i class="fas fa-link"></i></a>1.1 一次测试的过程</h2>
+      <p><img src="https://img-blog.csdnimg.cn/20200429173027710.png" alt="在这里插入图片描述"></p>
+<p>如上图，A、B为芯片。测试方法为：将2片芯片（A和B）置于测试台上，互相进行测试，测试报告是“好”或者“坏”，只取其一。</p>
+<ul>
+<li>假设：好芯片的报告一定是正确的，坏芯片的报告是不确定的（可能会出错）</li>
+</ul>
+<p>那么上述测试的结果有四种可能,如下图:</p>
+<p><img src="https://img-blog.csdnimg.cn/20200429173041111.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>上面的结果应该不难理解</p>
+</blockquote>
+<p>那么现在问题来了:</p>
+<ul>
+<li>输入：n片芯片，其中好芯片，至少比坏芯片多一片</li>
+<li>问题：设计一种测试方法，通过测试从n片中挑出1片好芯片</li>
+<li>要求：使用最少的测试次数
+        <h2 id="1-2-如何测试一块芯片的好坏"   >
+          <a href="#1-2-如何测试一块芯片的好坏" class="heading-link"><i class="fas fa-link"></i></a>1.2 如何测试一块芯片的好坏</h2>
+      <blockquote>
+<p>针对上述问题，现在先来研究一下，如何在上述n片芯片中，测试出A是好芯片还是坏芯片？</p>
+<ul>
+<li>问题：给定芯片A，判定A的好坏</li>
+<li>方法：用其他n-1片芯片对A进行测试。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<p>假设：n=7:好芯片数&gt;=4</p>
+<ol>
+<li>A好，6个芯片中至少3个报“好”</li>
+<li>A坏，6个芯片中至少4个报坏</li>
+</ol>
+<p>所以对于n是奇数情况下：好芯片数&gt;=（n+1）/2<br>A好，至少有(n-1)/2个报“好”<br>A坏，至少有(n+1)/2个报“坏”</p>
+<blockquote>
+<p>结论：<br>至少一半报好，A是好芯片<br>超过一半报坏，A是坏芯片</p>
+</blockquote>
+<p>假设: n=8:好芯片数&gt;=5</p>
+<ol>
+<li>A好，7个芯片中至少4个报“好”</li>
+<li>A坏，7个芯片中至少5个报“坏”</li>
+</ol>
+<p>所以对于n是偶数：好芯片数 &gt;= n/2+1.<br>A 好, 至少有 n/2个报告“好”<br>A 坏, 至少有 n/2+1个报告“坏”</p>
+<blockquote>
+<p>结论：n-1份报告中<br>至少一半报好，A是好芯片<br>至少一半报坏，A是坏芯片</p>
+</blockquote>
+<p>上面的分析，已经很清晰，我们已经知道如何测试一块芯片的好坏。那么人们最拿手的方法就是：暴力算法（蛮力算法）可以直接写代码了。。。</p>
+
+        <h2 id="1-3-蛮力算法"   >
+          <a href="#1-3-蛮力算法" class="heading-link"><i class="fas fa-link"></i></a>1.3 蛮力算法</h2>
+      <p>测试算法：任取 1片测试，如果是好芯片，测试结束；如果是坏芯片，抛弃，再从剩下芯片中任取 1片测试，直到得到 1片好芯片</p>
+<p>时间估计：</p>
+<p>第一片是坏芯片，最多测试n-2次<br>第二片是坏芯片，最多测试n-3次<br>…</p>
+<p><strong>总计：Θ(n^2 )</strong></p>
+<figure class="highlight cpp"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX 100</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">int</span> a[MAX];</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n)&#123;</span><br><span class="line">        srand(time(<span class="literal">NULL</span>));</span><br><span class="line">        <span class="built_in">memset</span>(a,<span class="number">0</span>,<span class="keyword">sizeof</span>(a));</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;   <span class="comment">/*芯片编号为数组下标，从1开始*/</span></span><br><span class="line">             <span class="built_in">cin</span>&gt;&gt;a[i];             <span class="comment">/*数组值代表芯片好坏，1为真0为假*/</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> cnt=<span class="number">0</span>;                  <span class="comment">/*查找次数*/</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> sum=<span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=n;j++)&#123;</span><br><span class="line">                cnt++;</span><br><span class="line">                <span class="keyword">if</span>(i!=j&amp;&amp;a[i]==<span class="number">1</span>&amp;&amp;a[j]==<span class="number">1</span>)   <span class="comment">/*两片芯片都是好的*/</span></span><br><span class="line">                    sum++;</span><br><span class="line">                    <span class="keyword">if</span>(i!=j&amp;&amp;a[i]==<span class="number">1</span>&amp;&amp;a[j]==<span class="number">0</span>)   <span class="comment">/*测试芯片是坏的*/</span></span><br><span class="line">                        sum+=rand()%<span class="number">2</span>;</span><br><span class="line">                    <span class="keyword">if</span>(i!=j&amp;&amp;a[i]==<span class="number">0</span>&amp;&amp;a[j]==<span class="number">0</span>)   <span class="comment">/*两片芯片都是坏的*/</span></span><br><span class="line">                        sum+=rand()%<span class="number">2</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(sum&gt;=n/<span class="number">2</span>)&#123;</span><br><span class="line">                    <span class="built_in">cout</span>&lt;&lt;<span class="string">"查找次数："</span>&lt;&lt;cnt&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+<p>可见时间复杂度之高，数据量一多，肯定会超时。</p>
+
+        <h2 id="1-4-分治算法设计思想"   >
+          <a href="#1-4-分治算法设计思想" class="heading-link"><i class="fas fa-link"></i></a>1.4 分治算法设计思想</h2>
+      <p>在分析分治算法的正确性之前，我们先给出这个算法的描述：</p>
+<p>假设n为偶数，将n片芯片两两一组做测试淘汰，剩下芯片构成子问题，进入下一轮分组淘汰。</p>
+<p>淘汰规则为：</p>
+<ul>
+<li>“好，好” ==&gt; 任留1片，进入下轮</li>
+<li>其他情况 ==&gt; 全部抛弃</li>
+</ul>
+<p><strong>递归截止条件：n&lt;=3</strong><br>3片芯片，一次测试可得到好芯片<br>1或者2片芯片，不需要再测试，他们都为好芯片。</p>
+<p>上述算法过程就是我们给出的分治策略的设计。那么为什么上述的策略是正确的呢？</p>
+<p>回忆一下，前面的文章，要保证分治策略的正确性的基本条件是：子问题与原问题性质相同。下面我们就来证明，上述分治策略的子问题与原问题性质相同。</p>
+
+        <h3 id="1-41-分治算法的正确性证明"   >
+          <a href="#1-41-分治算法的正确性证明" class="heading-link"><i class="fas fa-link"></i></a>1.41 分治算法的正确性证明</h3>
+      <p>原问题：n片芯片，其中好芯片，至少比坏芯片多一片</p>
+<blockquote>
+<p>那么子问题，命题1：当 n 是偶数时，在上述淘汰规则下，经过一轮淘汰，剩下的好芯片比坏芯片至少多1片</p>
+</blockquote>
+<p>我们需要证明上述子问题的命题1是正确的。</p>
+<p>证明：假设原问题中A，B都好的芯片有i组，A与B一好一坏的有j组，A与B都坏的有k组。那么经过一轮淘汰后，好芯片还剩i片，坏芯片还剩k片。</p>
+<p>因为</p>
+<ul>
+<li>初始芯片总数 2i+2j+2k = n</li>
+<li>初始好芯片多于坏芯片：2i+j &gt; 2k+j</li>
+</ul>
+<p>得出：i&gt;k</p>
+<p>所以，剩余的芯片好芯片比坏芯片，至少多1片。命题1 是正确的。即证明了上述分治算法的正确性。</p>
+<blockquote>
+<p>当n为奇数时，特殊处理。当n是奇数时，可能会出现问题，如图：<br><img src="https://img-blog.csdnimg.cn/20200429173514882.png" alt="在这里插入图片描述"><br>可见淘汰后的子问题并不满足于原问题性质相同，此时无法继续测试。</p>
+<ul>
+<li>处理办法是：当n为奇数时，增加一轮对轮空芯片的单独测试，如果该轮空芯片为好芯片则算法结束，如果是坏芯片，则淘汰该芯片。</li>
+</ul>
+</blockquote>
+<p>下面给出上述分治算法的伪码描述：<br><img   src="https://img-blog.csdnimg.cn/20200429173538122.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NyYXp5TW9vbw==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NyYXp5TW9vbwpx;"  alt="在这里插入图片描述"><br>补充说明：</p>
+<ol>
+<li>第6点：<code>if(1好1坏)</code>，则说明测试的两个至少一个为坏，所以未参加测试的一定为好的</li>
+<li>第7点：由于题目<strong>初始条件</strong>，好的芯片一定比坏的芯片多</li>
+</ol>
+
+        <h3 id="1-42-时间复杂度分析"   >
+          <a href="#1-42-时间复杂度分析" class="heading-link"><i class="fas fa-link"></i></a>1.42 时间复杂度分析</h3>
+      <p>设输入规模为n，，每轮淘汰后，芯片数至少减半，测试次数（含轮空处理）：O(n)</p>
+<p>时间复杂度：</p>
+<p>W(n) = W(n/2) + O(n)<br>W(3)=1,W(2)=W(1)=0</p>
+<p>解上述方程的得：W(n) = O(n)</p>
+<blockquote>
+<p>结果很振奋人心，你已经将一个O(n^2)级别的算法优化为了O(n)O(n)O(n)级别!!!</p>
+</blockquote>
+
+        <h1 id="2-总结"   >
+          <a href="#2-总结" class="heading-link"><i class="fas fa-link"></i></a>2. 总结</h1>
+      <p>最大的需要注意的地方就是：如何保证子问题与原问题性质相同:<br>可以：</p>
+<ol>
+<li>增加额外处理（比如上述n为奇数时对轮空数据的处理）</li>
+<li>额外处理的工作量，不改变函数的阶<figure class="highlight cpp"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX 100</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">int</span> num1,num2,sum;</span><br><span class="line">    <span class="keyword">int</span> a[MAX],b[MAX];</span><br><span class="line">    <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;n)&#123;            </span><br><span class="line">        srand(time(<span class="literal">NULL</span>));</span><br><span class="line">        <span class="built_in">memset</span>(a,<span class="number">0</span>,<span class="keyword">sizeof</span>(a));</span><br><span class="line">        <span class="built_in">memset</span>(b,<span class="number">0</span>,<span class="keyword">sizeof</span>(b));</span><br><span class="line">        <span class="comment">/*a数组标记芯片好坏，b数组记录被保留芯片编号*/</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;                    </span><br><span class="line">            <span class="built_in">cin</span>&gt;&gt;a[i];</span><br><span class="line">            b[i]=i;</span><br><span class="line">        &#125;</span><br><span class="line">        num1=n;</span><br><span class="line">        num2=<span class="number">1</span>;</span><br><span class="line">        sum=<span class="number">0</span>; </span><br><span class="line">        <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="comment">/*芯片只剩一片或两片则可以直接得到结果，结束循环*/</span></span><br><span class="line">            <span class="keyword">if</span>(num1&lt;=<span class="number">2</span>)                   </span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(num1%<span class="number">2</span>)&#123;     <span class="comment">/*芯片个数为奇数*/</span></span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;num1;i+=<span class="number">2</span>)&#123;</span><br><span class="line">                    sum++;            <span class="comment">/*记录查找次数*/</span></span><br><span class="line">                    <span class="keyword">if</span>(a[b[i]]==<span class="number">1</span>&amp;&amp;a[b[i+<span class="number">1</span>]]==<span class="number">1</span>)   <span class="comment">/*两片芯片都是好的*/</span></span><br><span class="line">                        b[num2++]=b[i+rand()%<span class="number">2</span>];</span><br><span class="line">                    <span class="comment">/*两片芯片是坏的，rand模拟结果是好的这一随机现象*/</span></span><br><span class="line">                    <span class="keyword">if</span>(a[b[i]]==<span class="number">0</span>&amp;&amp;a[b[i+<span class="number">1</span>]]==<span class="number">0</span>&amp;&amp;rand()%<span class="number">2</span>)                                               </span><br><span class="line">                      b[num2++]=b[i+rand()%<span class="number">2</span>];</span><br><span class="line">                  &#125;</span><br><span class="line">                  b[num2++]=b[num1];      <span class="comment">/*最后一块芯片保留*/</span></span><br><span class="line">             &#125;</span><br><span class="line">             <span class="keyword">else</span>&#123;                      <span class="comment">/*芯片个数为偶数*/</span></span><br><span class="line">                 <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=num1;i+=<span class="number">2</span>)&#123;</span><br><span class="line">                    sum++;</span><br><span class="line">                    <span class="keyword">if</span>(a[b[i]]==<span class="number">1</span>&amp;&amp;a[b[i+<span class="number">1</span>]]==<span class="number">1</span>)   <span class="comment">/*两片芯片都是好的*/</span></span><br><span class="line">                        b[num2++]=b[i+rand()%<span class="number">2</span>];</span><br><span class="line">                    <span class="keyword">if</span>(a[b[i]]==<span class="number">0</span>&amp;&amp;a[b[i+<span class="number">1</span>]]==<span class="number">0</span>&amp;&amp;rand()%<span class="number">2</span>)  <span class="comment">/*两片芯片是坏的*/</span></span><br><span class="line">                       b[num2++]=b[i+rand()%<span class="number">2</span>];</span><br><span class="line">                  &#125;</span><br><span class="line">             &#125;</span><br><span class="line">             num1=num2<span class="number">-1</span>;     <span class="comment">/*一次比较后保留芯片的个数*/</span></span><br><span class="line">             num2=<span class="number">1</span>;          <span class="comment">/*下一次查找的开始位置*/</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">"查找次数："</span>&lt;&lt;sum&lt;&lt;<span class="built_in">endl</span>; </span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">"找到的芯片编号："</span>&lt;&lt;b[<span class="number">1</span>]&lt;&lt;<span class="built_in">endl</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+</li>
+</ol>
+<blockquote>
+<p>参考链接：<span class="exturl"><a class="exturl__link"   href="https://www.jianshu.com/p/1cec17bfb2d5"  target="_blank" rel="noopener">https://www.jianshu.com/p/1cec17bfb2d5</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>参考链接：<span class="exturl"><a class="exturl__link"   href="https://blog.csdn.net/qq_37375427/article/details/102529005"  target="_blank" rel="noopener">https://blog.csdn.net/qq_37375427/article/details/102529005</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://motongxue.gitee.io">Motongxue</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://motongxue.gitee.io/posts/2307581756/">https://motongxue.gitee.io/posts/2307581756/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.gitee.io/tags/%E5%BF%AB%E9%80%9F%E5%B9%82/">快速幂</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.gitee.io/tags/%E7%AE%97%E6%B3%95/">算法</a></span></div><div class="post-share"><div class="social-share" data-sites="qzone, qq, weibo, wechat, douban, linkedin, facebook, twitter, google">Share to: </div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/posts/1415913582/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">工具使用-Git笔记</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/posts/2601188585/"><span class="paginator-prev__text">分治 斐波那契矩阵快速幂</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-芯片测试"><span class="toc-number">1.</span> <span class="toc-text">
+          1. 芯片测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-一次测试的过程"><span class="toc-number">1.1.</span> <span class="toc-text">
+          1.1 一次测试的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-如何测试一块芯片的好坏"><span class="toc-number">1.2.</span> <span class="toc-text">
+          1.2 如何测试一块芯片的好坏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-蛮力算法"><span class="toc-number">1.3.</span> <span class="toc-text">
+          1.3 蛮力算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-分治算法设计思想"><span class="toc-number">1.4.</span> <span class="toc-text">
+          1.4 分治算法设计思想</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-41-分治算法的正确性证明"><span class="toc-number">1.4.1.</span> <span class="toc-text">
+          1.41 分治算法的正确性证明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-42-时间复杂度分析"><span class="toc-number">1.4.2.</span> <span class="toc-text">
+          1.42 时间复杂度分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-总结"><span class="toc-number">2.</span> <span class="toc-text">
+          2. 总结</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/Motongxue.png" alt="avatar"></div><p class="sidebar-ov-author__text">你来了，要不要坐下来喝杯茶？</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://blog.csdn.net/CrazyMooo" target="_blank" rel="noopener" data-popover="social.csdn" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">csdn</span></a><a class="sidebar-ov-social-item" href="393888412" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-email"><a class="sidebar-ov-feed-email__link" href="http://moweichuan@foxmail.com" target="_blank" rel="noopener"><span class="sidebar-ov-feed-email__icon"><i class="fas fa-envelope"></i></span><span>Email 订阅</span></a></span></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Motongxue</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div><div>我抓不住世间的美好，只好装作万事顺遂的样子</div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><script>function initSearch() {
+  var isXML = true;
+  var search_path = 'search.json';
+
+  if (!search_path) {
+    search_path = 'search.xml';
+  } else if (/json$/i.test(search_path)) {
+    isXML = false;
+  }
+
+  var path = '/' + search_path;
+  $.ajax({
+    url: path,
+    dataType: isXML ? 'xml' : 'json',
+    async: true,
+    success: function (res) {
+      var datas = isXML ? $('entry', res).map(function () {
+        // 将 XML 转为 JSON
+        return {
+          title: $('title', this).text(),
+          content: $('content', this).text(),
+          url: $('url', this).text()
+        };
+      }).get() : res;
+      var $input = $('.search-input input');
+      var $result = $('.search-results');
+      // 搜索对象（标题、内容）的权重，影响显示顺序
+      var WEIGHT = { title: 100, content: 1 };
+      var searchPost = function () {
+        var searchText = $input.val().toLowerCase().trim();
+        // 根据空白字符分隔关键字
+        var keywords = searchText.split(/[\s]+/);
+        // 搜索结果
+        var matchPosts = [];
+
+        // 有多个关键字时，将原文字整个保存下来
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        // 防止未输入字符时搜索
+        if (searchText.length > 0) {
+          datas.forEach(function (data) {
+            var isMatch  = false;
+            // 没有标题的文章使用预设的 i18n 变量代替
+            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
+            var titleLower = title && title.toLowerCase();
+            // 删除 HTML 标签 和 所有空白字符
+            var content = data.content && data.content.replace(/<[^>]+>/g, '');
+            var contentLower = content && content.toLowerCase();
+            // 删除重复的 /
+            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
+            // 标题中匹配到的关键词
+            var titleHitSlice = [];
+            // 内容中匹配到的关键词
+            var contentHitSlice = [];
+
+            keywords.forEach(function (keyword) {
+              /**
+              * 获取匹配的关键词的索引
+              * @param {String} keyword 要匹配的关键字
+              * @param {String} text 原文字
+              * @param {Boolean} caseSensitive 是否区分大小写
+              * @param {Number} weight 匹配对象的权重。权重大的优先显示
+              * @return {Array}
+              */
+              function getIndexByword (word, text, caseSensitive, weight) {
+                if (!word || !text) {
+                  return [];
+                };
+
+                var startIndex = 0; // 每次匹配的开始索引
+                var index = -1;     // 匹配到的索引值
+                var result = [];    // 匹配结果
+
+                if (!caseSensitive) {
+                  word = word.toLowerCase();
+                  text = text.toLowerCase();
+                }
+
+                while((index = text.indexOf(word, startIndex)) !== -1) {
+                  var hasMatch = false;
+                  // 索引位置相同的关键词，保留长度较长的
+                  titleHitSlice.forEach(function (hit) {
+                    if (hit.index === index && hit.word.length < word.length) {
+                      hit.word = word;
+                      hasMatch = true;
+                    }
+                  });
+                  startIndex = index + word.length;
+                  !hasMatch && result.push({ index: index, word: word, weight: weight });
+                }
+                return result;
+              }
+              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
+              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
+            });
+
+            var hitTitle = titleHitSlice.length;
+            var hitContent = contentHitSlice.length;
+
+            if (hitTitle > 0 || hitContent > 0) {
+              isMatch = true;
+            }
+            if (isMatch) {
+              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
+                // 按照匹配文字的索引的递增顺序排序
+                hit.sort(function (left, right) {
+                  return left.index - right.index;
+                });
+              });
+              /**
+              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
+              * @param {String} text 原文本
+              * @param {Array} hitSlice 匹配项的索引信息
+              * @param {Number} start 开始索引
+              * @param {Number} end 结束索引
+              * @return {String}
+              */
+              function highlightKeyword (text, hitSlice, start, end) {
+                if (!text || !hitSlice || !hitSlice.length) {
+                  return;
+                }
+
+                var result = '';
+                var startIndex = start;
+                var endIndex = end;
+                hitSlice.forEach(function (hit) {
+                  if (hit.index < startIndex) {
+                    return;
+                  }
+
+                  var hitWordEnd = hit.index + hit.word.length;
+                  result += text.slice(startIndex, hit.index);
+                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
+                  startIndex = hitWordEnd;
+                });
+                result += text.slice(startIndex, endIndex);
+                return result;
+              }
+
+              var postData = {};
+              // 文章总的搜索权重
+              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
+              // 标记匹配关键词后的标题
+              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
+              // 标记匹配关键词后的内容
+              var postContent;
+              // 显示内容的长度
+              var SHOW_WORD_LENGTH = 200;
+              // 命中关键词前的字符显示长度
+              var SHOW_WORD_FRONT_LENGTH = 20;
+              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+
+              // 截取匹配的第一个字符，前后共 200 个字符来显示
+              if (contentHitSlice.length > 0) {
+                var firstIndex = contentHitSlice[0].index;
+                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
+                var end = firstIndex + SHOW_WORD_END_LENGTH;
+                postContent = highlightKeyword(content, contentHitSlice, start, end);
+              } else { // 未匹配到内容，直接截取前 200 个字符来显示
+                postContent = content.slice(0, SHOW_WORD_LENGTH);
+              }
+              postData.title = postTitle;
+              postData.content = postContent;
+              postData.url = postURL;
+              postData.weight = postWeight;
+              matchPosts.push(postData);
+            }
+          });
+        }
+
+        var resultInnerHtml = '';
+        if (matchPosts.length) {
+          // 按权重递增的顺序排序，使权重大的优先显示
+          matchPosts.sort(function (left, right) {
+            return right.weight - left.weight;
+          });
+          resultInnerHtml += '<ul>';
+          matchPosts.forEach(function (post) {
+            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
+            resultInnerHtml += post.title;
+            resultInnerHtml += '</a><div class="search-results-content">';
+            resultInnerHtml += post.content;
+            resultInnerHtml += '</div></li>';
+          });
+          resultInnerHtml += '</ul>';
+        } else {
+          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
+        }
+        $result.html(resultInnerHtml);
+      };
+      $input.on('input', searchPost);
+      $input.on('keyup', function (e) {
+        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
+          searchPost();
+        }
+      });
+    }
+  });
+}
+
+function closeSearch () {
+  $('body').css({ overflow: 'auto' });
+  $('.search-popup').css({ display: 'none' });
+  $('.search-mask').css({ display: 'none' });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  Stun.utils.pjaxReloadLocalSearch = function () {
+    $('.header-nav-search').on('click', function (e) {
+      e.stopPropagation();
+      $('body').css('overflow', 'hidden');
+      $('.search-popup')
+        .velocity('stop')
+        .velocity('transition.expandIn', {
+          duration: 300,
+          complete: function () {
+            $('.search-popup input').focus();
+          }
+        });
+      $('.search-mask')
+        .velocity('stop')
+        .velocity('transition.fadeIn', {
+          duration: 300
+        });
+
+      initSearch();
+    });
+    $('.search-mask, .search-close').on('click', function () {
+      closeSearch();
+    });
+    $(document).on('keydown', function (e) {
+      // Escape <=> 27
+      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
+        closeSearch();
+      }
+    });
+  };
+
+  Stun.utils.pjaxReloadLocalSearch();
+}, false);</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.0.0-rc.0"></script><script src="/js/stun-boot.js?v=2.0.0-rc.0"></script><script src="/js/scroll.js?v=2.0.0-rc.0"></script><script src="/js/header.js?v=2.0.0-rc.0"></script><script src="/js/sidebar.js?v=2.0.0-rc.0"></script></body></html>
