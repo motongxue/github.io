@@ -1,0 +1,602 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="renderer" content="webkit"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="32x32"><meta name="description" content="@[toc]                     ―、什么是全文检索                           1、数据的分类       ​    1.结构化数据 ​        格式固定、长度固定、数据类型固定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术 lucene">
+<meta property="og:url" content="https://motongxue.gitee.io/posts/3115972334/index.html">
+<meta property="og:site_name" content="Motongxue&#39;s Blog">
+<meta property="og:description" content="@[toc]                     ―、什么是全文检索                           1、数据的分类       ​    1.结构化数据 ​        格式固定、长度固定、数据类型固定">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200217132455985.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NyYXp5TW9vbw==,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2020-05-04T02:01:41.587Z">
+<meta property="article:modified_time" content="2020-05-04T02:03:44.608Z">
+<meta property="article:author" content="Motongxue">
+<meta property="article:tag" content="lucene">
+<meta property="article:tag" content="检索">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200217132455985.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NyYXp5TW9vbw==,size_16,color_FFFFFF,t_70"><meta name="keywords" content="Motongxue, Motongxue's Blog"><meta name="description" content=""><title>技术 lucene | Motongxue's Blog</title><link ref="canonical" href="https://motongxue.gitee.io/posts/3115972334/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0-rc.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/mytech/"><span class="header-nav-menu-item__icon"><i class="fas fa-feather-alt"></i></span><span class="header-nav-menu-item__text">技术</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/mylife/"><span class="header-nav-menu-item__icon"><i class="fas fa-book"></i></span><span class="header-nav-menu-item__text">生活</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">文章</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/archives/"><span class="header-nav-submenu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-submenu-item__text">归档</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/tags/"><span class="header-nav-submenu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-submenu-item__text">标签</span></a></div></div></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Motongxue's Blog</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">技术 lucene</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-05-04</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-05-04</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">3.4k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">23分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body"><p>@[toc]</p>
+
+        <h2 id="―、什么是全文检索"   >
+          <a href="#―、什么是全文检索" class="heading-link"><i class="fas fa-link"></i></a>―、什么是全文检索</h2>
+      
+        <h3 id="1、数据的分类"   >
+          <a href="#1、数据的分类" class="heading-link"><i class="fas fa-link"></i></a>1、数据的分类</h3>
+      <p>​    1.结构化数据</p>
+<p>​        格式固定、长度固定、数据类型固定</p>
+<a id="more"></a>
+<p>​        例如数据库中的数据</p>
+<p>​    2.非结构化数据</p>
+<p>​        word文档，pdf文档、邮件、html、xml</p>
+<p>​        格式不固定、长度不固定、数据类型不固定</p>
+
+        <h3 id="2、数据的査词"   >
+          <a href="#2、数据的査词" class="heading-link"><i class="fas fa-link"></i></a>2、数据的査词</h3>
+      <p>​    1.结构化数据的査词</p>
+<p>​        SQL语句，査词结构化数据的方法。简单、速度快</p>
+<p>​    2.非结构化数据的査词</p>
+<p>​        从文本文件中找出包含spring单词的文件，</p>
+<p>​        1.目测</p>
+<p>​        2.使用程序把文档读取到内存中，然后匹配字符串。顺序扫描</p>
+<p>​        3.把非结构化数据变成结构化数据</p>
+<p>​            先根据空格进行字符拿拆分，得到一个单词列表.基于单词列表创建一个索引</p>
+<p>​            然后查询索引，根据单词和文档的对应关系找到文档列表，这个过程叫做全文检索</p>
+<p>​            索引： 一个为了提高査词速度.创建某种数据结构的集合</p>
+
+        <h3 id="3、全文检索"   >
+          <a href="#3、全文检索" class="heading-link"><i class="fas fa-link"></i></a>3、全文检索</h3>
+      <p>​    先创建索引然后查询索引的过程叫做全文检索</p>
+<p>​    索引一次创建可以多次使用，表现为每次查询速度很快.</p>
+
+        <h2 id="二、-全文检索的应用场景"   >
+          <a href="#二、-全文检索的应用场景" class="heading-link"><i class="fas fa-link"></i></a>二、 全文检索的应用场景</h2>
+      <p>​    1、 搜索引擎</p>
+<p>​        百度、360搜索、谷歌、搜狗</p>
+<p>​    2、 站内搜京</p>
+<p>​        论坛搜索、微博、文章搜索</p>
+<p>​    3、 电商搜索</p>
+<p>​        淘宝搜索、京东搜索</p>
+<p>​    4、 只要是有搜索的地方就可以使用全文检索技术</p>
+
+        <h2 id="三、-什么是Lucene"   >
+          <a href="#三、-什么是Lucene" class="heading-link"><i class="fas fa-link"></i></a>三、 什么是Lucene</h2>
+      <p>​    Lucene是一个基于java开发全文检索工具包</p>
+
+        <h2 id="四、-Lucene实现全文检索的流程"   >
+          <a href="#四、-Lucene实现全文检索的流程" class="heading-link"><i class="fas fa-link"></i></a>四、 Lucene实现全文检索的流程</h2>
+      
+        <h3 id="1-创建索引"   >
+          <a href="#1-创建索引" class="heading-link"><i class="fas fa-link"></i></a>1.创建索引</h3>
+      <p>​    1.获得文档</p>
+<p>​            原始文档：要基于那些数据来进行搜索.那么这些数据就是原始文档</p>
+<p>​            搜索引擎：使用爬虫获得原始文档</p>
+<p>​            站内搜索：数据库中的数据。</p>
+<p>​            案例：直接使用 io 流读取磁盘上的文件。</p>
+<p>​    2.构建文档对象</p>
+<p>​        对应每个原始文档创建一个 Document 对象</p>
+<p>​        每个Document对象中包含多个域（ field ) </p>
+<p>​        域中保存就是原始文档数据。</p>
+<p>​            域的名称</p>
+<p>​            域的值</p>
+<p>​        每个文档都有一个唯一的编号，就是文档id</p>
+<p>​    3.分析文档</p>
+<p>​        就是分词的过程 </p>
+<p>​            1.根据空格进行字符串拆分．得到一个单词列表 </p>
+<p>​            2.把单词统一转换成小写。</p>
+<p>​            3.去除标点符号</p>
+<p>​            4.去除停用词</p>
+<p>​            停用词：无意义的词</p>
+<p>​            每个关键词都封装成一个下 Term对象中。</p>
+<p>​                Term中包含两部分内容：</p>
+<p>​                    关键词所在的域</p>
+<p>​                    关键词本者</p>
+<p>​                不同的域中拆分出来的相同的关键词是不同的 Term</p>
+<p>​    4.创建索引</p>
+<p>​        基于关键词列表创建一个索引．保存到索引库中。</p>
+<p>​        索引库中：</p>
+<p>​            索引 </p>
+<p>​            document 对象</p>
+<p>​            关键词和文档的对应关系</p>
+<p>​        通过词语找文档．这种索引的结构叫倒排索引结构。</p>
+
+        <h3 id="2-查询索引"   >
+          <a href="#2-查询索引" class="heading-link"><i class="fas fa-link"></i></a>2.查询索引</h3>
+      <p>​    1.用户查询接口</p>
+<p>​        用户输入查询条件的地方</p>
+<p>​        例如：百度的搜索框</p>
+<p>​    2.把关键词封装成一个查询对象</p>
+<p>​        要查询的域</p>
+<p>​        要搜索的关键词</p>
+<p>​    3.执行查询</p>
+<p>​        根据要查询的关键词到对应的域上进行搜索。</p>
+<p>​        找到关键词，根据关键词找到对应的文档</p>
+<p>​    4.渲染结果</p>
+<p>​        根据文档的 id 找到文档对象</p>
+<p>​        对关键词进行高亮显示</p>
+<p>​        分页处理</p>
+<p>​        最终展示给用户看。</p>
+
+        <h2 id="五、入门程序"   >
+          <a href="#五、入门程序" class="heading-link"><i class="fas fa-link"></i></a>五、入门程序</h2>
+      
+        <h3 id="1-．创建索引"   >
+          <a href="#1-．创建索引" class="heading-link"><i class="fas fa-link"></i></a>1 ．创建索引</h3>
+      <p>​    环境：</p>
+<p>​        需要下载 Lucene </p>
+<p>​        http//lucene.apache.org/</p>
+<p>​        最低要求jdk1.8</p>
+<p>​    工程搭建：</p>
+<p>​        创建一个 java 工程</p>
+<p>​        添加 jar ： </p>
+<p>​            lucene-analyzers-common-7.4.0.jar </p>
+<p>​            lucene-core-7.4.0.jar </p>
+<p>​            commons-io-jar</p>
+<p>​    步骤： </p>
+<p>​        1. 创建一个Director对象．指定索引库保存的位置 。 </p>
+<p>​        2. 基于 Directory 对象创建一个 IndexWriter对象 </p>
+<p>​        3. 读取磁盘上的文件．对应每个文件创建一个文档对象。 </p>
+<p>​        4. 向文档对象中添加域 </p>
+<p>​        5. 把文档对象写入索引库 </p>
+<ol start="6">
+<li><p>关闭 indexwriter 对象 </p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建索引</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">createIndex</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//指定索引库存放的路径</span></span><br><span class="line">    <span class="comment">//D:\temp\index</span></span><br><span class="line">    Directory directory = FSDirectory.open(<span class="keyword">new</span> File(<span class="string">"D:\\temp\\index"</span>).toPath());</span><br><span class="line">    <span class="comment">//索引库还可以存放到内存中</span></span><br><span class="line">    <span class="comment">//Directory directory = new RAMDirectory();</span></span><br><span class="line">    <span class="comment">//创建indexwriterCofig对象</span></span><br><span class="line">    IndexWriterConfig config = <span class="keyword">new</span> IndexWriterConfig();</span><br><span class="line">    <span class="comment">//创建indexwriter对象</span></span><br><span class="line">    IndexWriter indexWriter = <span class="keyword">new</span> IndexWriter(directory, config);</span><br><span class="line">    <span class="comment">//原始文档的路径</span></span><br><span class="line">    File dir = <span class="keyword">new</span> File(<span class="string">"D:\\temp\\searchsource"</span>);</span><br><span class="line">    <span class="keyword">for</span> (File f : dir.listFiles()) &#123;</span><br><span class="line">        <span class="comment">//文件名</span></span><br><span class="line">        String fileName = f.getName();</span><br><span class="line">        <span class="comment">//文件内容</span></span><br><span class="line">        String fileContent = FileUtils.readFileToString(f);</span><br><span class="line">        <span class="comment">//文件路径</span></span><br><span class="line">        String filePath = f.getPath();</span><br><span class="line">        <span class="comment">//文件的大小</span></span><br><span class="line">        <span class="keyword">long</span> fileSize  = FileUtils.sizeOf(f);</span><br><span class="line">        <span class="comment">//创建文件名域</span></span><br><span class="line">        <span class="comment">//第一个参数：域的名称</span></span><br><span class="line">        <span class="comment">//第二个参数：域的内容</span></span><br><span class="line">        <span class="comment">//第三个参数：是否存储</span></span><br><span class="line">        Field fileNameField = <span class="keyword">new</span> TextField(<span class="string">"filename"</span>, fileName, Field.Store.YES);</span><br><span class="line">        <span class="comment">//文件内容域</span></span><br><span class="line">        Field fileContentField = <span class="keyword">new</span> TextField(<span class="string">"content"</span>, fileContent, Field.Store.YES);</span><br><span class="line">        <span class="comment">//文件路径域（不分析、不索引、只存储）</span></span><br><span class="line">        Field filePathField = <span class="keyword">new</span> TextField(<span class="string">"path"</span>, filePath, Field.Store.YES);</span><br><span class="line">        <span class="comment">//文件大小域</span></span><br><span class="line">        Field fileSizeField = <span class="keyword">new</span> TextField(<span class="string">"size"</span>, fileSize + <span class="string">""</span>, Field.Store.YES);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建document对象</span></span><br><span class="line">        Document document = <span class="keyword">new</span> Document();</span><br><span class="line">        document.add(fileNameField);</span><br><span class="line">        document.add(fileContentField);</span><br><span class="line">        document.add(filePathField);</span><br><span class="line">        document.add(fileSizeField);</span><br><span class="line">        <span class="comment">//创建索引，并写入索引库</span></span><br><span class="line">        indexWriter.addDocument(document);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//关闭indexwriter</span></span><br><span class="line">    indexWriter.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>​</p>
+</li>
+</ol>
+
+        <h3 id="2-使用-luke-查看索引库中的内容"   >
+          <a href="#2-使用-luke-查看索引库中的内容" class="heading-link"><i class="fas fa-link"></i></a>2. 使用 luke 查看索引库中的内容</h3>
+      <p><img   src="https://img-blog.csdnimg.cn/20200217132455985.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NyYXp5TW9vbw==,size_16,color_FFFFFF,t_70" style="width: image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,tepx;height: t_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0NyYXp5TW9vbwpx;"  alt="在这里插入图片描述"></p>
+
+        <h3 id="3-查询索引库"   >
+          <a href="#3-查询索引库" class="heading-link"><i class="fas fa-link"></i></a>3. 查询索引库</h3>
+      <p>   步骤： </p>
+<p>​       1. 创建一个 Directory 对象，指定索引库的位置 </p>
+<p>​       2. 创建一个 IndexReader 对象</p>
+<p>​       3. 创建一个 IndexSearcher 对象．构造方法中的参数 indexReader 对象。</p>
+<p>​       4. 创建一个 Query对象，TermQuery</p>
+<p>​       5. 执行查询，得到一个 TopDocs 对象</p>
+<p>​       6. 取查询结果的总记录数</p>
+<p>​       7. 取文档列表</p>
+<p>​       8. 打印文档中的内容</p>
+<ol start="9">
+<li><p>关闭 indexReader 对象</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//查询索引库</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">searchIndex</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">//指定索引库存放的路径</span></span><br><span class="line">    <span class="comment">//D:\temp\index</span></span><br><span class="line">    Directory directory = FSDirectory.open(<span class="keyword">new</span> File(<span class="string">"D:\\temp\\index"</span>).toPath());</span><br><span class="line">    <span class="comment">//创建indexReader对象</span></span><br><span class="line">    IndexReader indexReader = DirectoryReader.open(directory);</span><br><span class="line">    <span class="comment">//创建indexsearcher对象</span></span><br><span class="line">    IndexSearcher indexSearcher = <span class="keyword">new</span> IndexSearcher(indexReader);</span><br><span class="line">    <span class="comment">//创建查询</span></span><br><span class="line">    Query query = <span class="keyword">new</span> TermQuery(<span class="keyword">new</span> Term(<span class="string">"filename"</span>, <span class="string">"apache"</span>));</span><br><span class="line">    <span class="comment">//执行查询</span></span><br><span class="line">    <span class="comment">//第一个参数是查询对象，第二个参数是查询结果返回的最大值</span></span><br><span class="line">    TopDocs topDocs = indexSearcher.search(query, <span class="number">10</span>);</span><br><span class="line">    <span class="comment">//查询结果的总条数</span></span><br><span class="line">    System.out.println(<span class="string">"查询结果的总条数："</span>+ topDocs.totalHits);</span><br><span class="line">    <span class="comment">//遍历查询结果</span></span><br><span class="line">    <span class="comment">//topDocs.scoreDocs存储了document对象的id</span></span><br><span class="line">    <span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">        <span class="comment">//scoreDoc.doc属性就是document对象的id</span></span><br><span class="line">        <span class="comment">//根据document的id找到document对象</span></span><br><span class="line">        Document document = indexSearcher.doc(scoreDoc.doc);</span><br><span class="line">        System.out.println(document.get(<span class="string">"filename"</span>));</span><br><span class="line">        <span class="comment">//System.out.println(document.get("content"));</span></span><br><span class="line">        System.out.println(document.get(<span class="string">"path"</span>));</span><br><span class="line">        System.out.println(document.get(<span class="string">"size"</span>));</span><br><span class="line">        System.out.println(<span class="string">"-------------------------"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//关闭indexreader对象</span></span><br><span class="line">    indexReader.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>​</p>
+</li>
+</ol>
+
+        <h2 id="六、分析器"   >
+          <a href="#六、分析器" class="heading-link"><i class="fas fa-link"></i></a>六、分析器</h2>
+      <p>​    默认使用的数标准分析器 StandardAnalyzer</p>
+
+        <h3 id="1-查看分析器的分析效果"   >
+          <a href="#1-查看分析器的分析效果" class="heading-link"><i class="fas fa-link"></i></a>1. 查看分析器的分析效果</h3>
+      <p>​    使用 Analyzer 对象的 tokenStream 方法返回一个 TokenStream 对象。词对象中包含了最终分词结果。</p>
+<p>​    实现步骤： </p>
+<p>​        1. 创建一个Analyzer对象，StandardAnalyzer对象 </p>
+<p>​        2. 使用分析器对象的 tokenStream 方法获得一个 TokenStream 对象 </p>
+<p>​        3. 向 TokenStream 对象中设置一个引用，相当于数一个指针 </p>
+<p>​        4. 调用 TokenStream 对象的 reset 方法。如果不调用抛异常 </p>
+<p>​        5. 使用 while 循环遍历 TokenStream 对象</p>
+<ol start="6">
+<li><p>关闭TokenStream对象。</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//查看标准分析器的分词效果</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testTokenStream</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">//创建一个标准分析器对象</span></span><br><span class="line">    Analyzer analyzer = <span class="keyword">new</span> StandardAnalyzer();</span><br><span class="line">    <span class="comment">//获得tokenStream对象</span></span><br><span class="line">    <span class="comment">//第一个参数：域名，可以随便给一个</span></span><br><span class="line">    <span class="comment">//第二个参数：要分析的文本内容</span></span><br><span class="line">    TokenStream tokenStream = analyzer.tokenStream(<span class="string">"test"</span>, <span class="string">"The Spring Framework provides a comprehensive programming and configuration model."</span>);</span><br><span class="line">    <span class="comment">//添加一个引用，可以获得每个关键词</span></span><br><span class="line">    CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    <span class="comment">//添加一个偏移量的引用，记录了关键词的开始位置以及结束位置</span></span><br><span class="line">    OffsetAttribute offsetAttribute = tokenStream.addAttribute(OffsetAttribute<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    <span class="comment">//将指针调整到列表的头部</span></span><br><span class="line">    tokenStream.reset();</span><br><span class="line">    <span class="comment">//遍历关键词列表，通过incrementToken方法判断列表是否结束</span></span><br><span class="line">    <span class="keyword">while</span>(tokenStream.incrementToken()) &#123;</span><br><span class="line">        <span class="comment">//关键词的起始位置</span></span><br><span class="line">        System.out.println(<span class="string">"start-&gt;"</span> + offsetAttribute.startOffset());</span><br><span class="line">        <span class="comment">//取关键词</span></span><br><span class="line">        System.out.println(charTermAttribute);</span><br><span class="line">        <span class="comment">//结束位置</span></span><br><span class="line">        System.out.println(<span class="string">"end-&gt;"</span> + offsetAttribute.endOffset());</span><br><span class="line">    &#125;</span><br><span class="line">    tokenStream.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>​</p>
+</li>
+</ol>
+
+        <h3 id="2-IKAnalyzer-的便用方法（中文分析器）"   >
+          <a href="#2-IKAnalyzer-的便用方法（中文分析器）" class="heading-link"><i class="fas fa-link"></i></a>2. IKAnalyzer 的便用方法（中文分析器）</h3>
+      <p>​    1.把 IKAnalyzer 的 jar 包添加到工程中 </p>
+<p>​    2.把配置文件和扩展词典添加到工程的 classpath 下</p>
+<p>​    注意：扩展词典严禁使用weindows记事本编辑保证扩展词典的编码格式是utf-8 </p>
+<p>​    扩展词典：添加一些新词</p>
+<p>​    停用词词典：无意义的词或者是敏感词汇</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addDocument</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">//索引库存放路径</span></span><br><span class="line">    Directory directory = FSDirectory.open(<span class="keyword">new</span> File(<span class="string">"D:\\temp\\index"</span>).toPath());</span><br><span class="line">    IndexWriterConfig config = <span class="keyword">new</span> IndexWriterConfig(<span class="keyword">new</span> IKAnalyzer());</span><br><span class="line">    <span class="comment">//创建一个indexwriter对象</span></span><br><span class="line">    IndexWriter indexWriter = <span class="keyword">new</span> IndexWriter(directory, config);</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h2 id="七、索引库维护"   >
+          <a href="#七、索引库维护" class="heading-link"><i class="fas fa-link"></i></a>七、索引库维护</h2>
+      <ol>
+<li>
+        <h3 id="Field域的属性"   >
+          <a href="#Field域的属性" class="heading-link"><i class="fas fa-link"></i></a>Field域的属性</h3>
+      <p><strong>是否分析</strong>：是否对域的内容进行分词处理。前提是我们要对域的内容进行查询。</p>
+<p><strong>是否索引</strong>：将Field分析后的词或整个Field值进行索引，只有索引方可搜索到。</p>
+<p>比如：商品名称、商品简介分析后进行索引，订单号、身份证号不用分析但也要索引，这些将来都要作为查询条件。</p>
+<p><strong>是否存储</strong>：将Field值存储在文档中，存储在文档中的Field才可以从Document中获取</p>
+<p>比如：商品名称、订单号，凡是将来要从Document中获取的Field都要存储。</p>
+<p><strong>是否存储的标准：是否要将内容展示给用户</strong></p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>Field类</th>
+<th>数据类型</th>
+<th>Analyzed  是否分析</th>
+<th>Indexed  是否索引</th>
+<th>Stored  是否存储</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>StringField(FieldName,  FieldValue,Store.YES))</td>
+<td>字符串</td>
+<td>N</td>
+<td>Y</td>
+<td>Y或N</td>
+<td>这个Field用来构建一个字符串Field，但是不会进行分析，会将整个串存储在索引中，比如(订单号,姓名等)  是否存储在文档中用Store.YES或Store.NO决定</td>
+</tr>
+<tr>
+<td>LongPoint(String name, long… point)</td>
+<td>Long型</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>可以使用LongPoint、IntPoint等类型存储数值类型的数据。让数值类型可以进行索引。但是不能存储数据，如果想存储数据还需要使用StoredField。</td>
+</tr>
+<tr>
+<td>StoredField(FieldName, FieldValue)</td>
+<td>重载方法，支持多种类型</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>这个Field用来构建不同类型Field  不分析，不索引，但要Field存储在文档中</td>
+</tr>
+<tr>
+<td>TextField(FieldName, FieldValue, Store.NO)  或  TextField(FieldName, reader)</td>
+<td>字符串  或  流</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y或N</td>
+<td>如果是一个Reader, lucene猜测内容比较多,会采用Unstored的策略.</td>
+</tr>
+</tbody></table></div>
+</li>
+<li>
+        <h3 id="添加文档"   >
+          <a href="#添加文档" class="heading-link"><i class="fas fa-link"></i></a>添加文档</h3>
+      <figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//添加索引</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addDocument</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">//索引库存放路径</span></span><br><span class="line">    Directory directory = FSDirectory.open(<span class="keyword">new</span> File(<span class="string">"D:\\temp\\index"</span>).toPath());</span><br><span class="line">    IndexWriterConfig config = <span class="keyword">new</span> IndexWriterConfig(<span class="keyword">new</span> IKAnalyzer());</span><br><span class="line">    <span class="comment">//创建一个indexwriter对象</span></span><br><span class="line">    IndexWriter indexWriter = <span class="keyword">new</span> IndexWriter(directory, config);</span><br><span class="line">    <span class="comment">//创建一个Document对象</span></span><br><span class="line">    Document document = <span class="keyword">new</span> Document();</span><br><span class="line">    <span class="comment">//向document对象中添加域。</span></span><br><span class="line">    <span class="comment">//不同的document可以有不同的域，同一个document可以有相同的域。</span></span><br><span class="line">    document.add(<span class="keyword">new</span> TextField(<span class="string">"filename"</span>, <span class="string">"新添加的文档"</span>, Field.Store.YES));</span><br><span class="line">    document.add(<span class="keyword">new</span> TextField(<span class="string">"content"</span>, <span class="string">"新添加的文档的内容"</span>, Field.Store.NO));</span><br><span class="line">    <span class="comment">//LongPoint创建索引</span></span><br><span class="line">    document.add(<span class="keyword">new</span> LongPoint(<span class="string">"size"</span>, <span class="number">1000l</span>));</span><br><span class="line">    <span class="comment">//StoreField存储数据</span></span><br><span class="line">    document.add(<span class="keyword">new</span> StoredField(<span class="string">"size"</span>, <span class="number">1000l</span>));</span><br><span class="line">    <span class="comment">//不需要创建索引的就使用StoreField存储</span></span><br><span class="line">    document.add(<span class="keyword">new</span> StoredField(<span class="string">"path"</span>, <span class="string">"d:/temp/1.txt"</span>));</span><br><span class="line">    <span class="comment">//添加文档到索引库</span></span><br><span class="line">    indexWriter.addDocument(document);</span><br><span class="line">    <span class="comment">//关闭indexwriter</span></span><br><span class="line">    indexWriter.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>​</p>
+</li>
+<li>
+        <h3 id="删除文档"   >
+          <a href="#删除文档" class="heading-link"><i class="fas fa-link"></i></a>删除文档</h3>
+      </li>
+<li><p>删除全部 (说明：将索引目录的索引信息全部删除，直接彻底删除，无法恢复)</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//删除全部索引</span></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteAllIndex</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		IndexWriter indexWriter = getIndexWriter();</span><br><span class="line">		<span class="comment">//删除全部索引</span></span><br><span class="line">		indexWriter.deleteAll();</span><br><span class="line">		<span class="comment">//关闭indexwriter</span></span><br><span class="line">		indexWriter.close();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></div></figure>
+</li>
+<li><p>根据查询、关键词删除文档 , </p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//根据查询条件删除索引</span></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteIndexByQuery</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		IndexWriter indexWriter = getIndexWriter();</span><br><span class="line">		<span class="comment">//创建一个查询条件</span></span><br><span class="line">		Query query = <span class="keyword">new</span> TermQuery(<span class="keyword">new</span> Term(<span class="string">"filename"</span>, <span class="string">"apache"</span>));</span><br><span class="line">		<span class="comment">//根据查询条件删除</span></span><br><span class="line">		indexWriter.deleteDocuments(query);</span><br><span class="line">		<span class="comment">//关闭indexwriter</span></span><br><span class="line">		indexWriter.close();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>​</p>
+</li>
+</ol>
+
+        <h3 id="3-修改文档"   >
+          <a href="#3-修改文档" class="heading-link"><i class="fas fa-link"></i></a>3. 修改文档</h3>
+      <p>​    修改的原理是先删除后添加</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//修改索引库</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateIndex</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    IndexWriter indexWriter = getIndexWriter();</span><br><span class="line">    <span class="comment">//创建一个Document对象</span></span><br><span class="line">    Document document = <span class="keyword">new</span> Document();</span><br><span class="line">    <span class="comment">//向document对象中添加域。</span></span><br><span class="line">    <span class="comment">//不同的document可以有不同的域，同一个document可以有相同的域。</span></span><br><span class="line">    document.add(<span class="keyword">new</span> TextField(<span class="string">"filename"</span>, <span class="string">"要更新的文档"</span>, Field.Store.YES));</span><br><span class="line">    document.add(<span class="keyword">new</span> TextField(<span class="string">"content"</span>, <span class="string">" Lucene 简介 Lucene 是一个基于 Java 的全文信息检索工具包,"</span> +</span><br><span class="line">                                                       <span class="string">"它不是一个完整的搜索应用程序,而是为你的应用程序提供索引和搜索功能。"</span>,</span><br><span class="line">                Field.Store.YES));</span><br><span class="line">    indexWriter.updateDocument(<span class="keyword">new</span> Term(<span class="string">"content"</span>, <span class="string">"java"</span>), document);</span><br><span class="line">    <span class="comment">//关闭indexWriter</span></span><br><span class="line">    indexWriter.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h2 id="八、索引库查询"   >
+          <a href="#八、索引库查询" class="heading-link"><i class="fas fa-link"></i></a>八、索引库查询</h2>
+      
+        <h3 id="1-使用-Query-的子类"   >
+          <a href="#1-使用-Query-的子类" class="heading-link"><i class="fas fa-link"></i></a>1. 使用 Query 的子类</h3>
+      <p>​    1. TermQuery </p>
+<p>​        根据关键词进行查询。</p>
+<p>​        需要指定要查询的域及要查询的关键词 </p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用Termquery查询</span></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testTermQuery</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Directory directory = FSDirectory.open(<span class="keyword">new</span> File(<span class="string">"D:\\temp\\index"</span>).toPath());</span><br><span class="line">    IndexReader indexReader = DirectoryReader.open(directory);</span><br><span class="line">    IndexSearcher indexSearcher = <span class="keyword">new</span> IndexSearcher(indexReader);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//创建查询对象</span></span><br><span class="line">    Query query = <span class="keyword">new</span> TermQuery(<span class="keyword">new</span> Term(<span class="string">"content"</span>, <span class="string">"lucene"</span>));</span><br><span class="line">    <span class="comment">//执行查询</span></span><br><span class="line">    TopDocs topDocs = indexSearcher.search(query, <span class="number">10</span>);</span><br><span class="line">    <span class="comment">//共查询到的document个数</span></span><br><span class="line">    System.out.println(<span class="string">"查询结果总数量："</span> + topDocs.totalHits);</span><br><span class="line">    <span class="comment">//遍历查询结果</span></span><br><span class="line">    <span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">        Document document = indexSearcher.doc(scoreDoc.doc);</span><br><span class="line">        System.out.println(document.get(<span class="string">"filename"</span>));</span><br><span class="line">        <span class="comment">//System.out.println(document.get("content"));</span></span><br><span class="line">        System.out.println(document.get(<span class="string">"path"</span>));</span><br><span class="line">        System.out.println(document.get(<span class="string">"size"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//关闭indexreader</span></span><br><span class="line">    indexSearcher.getIndexReader().close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+<p>​    2. RangeQuery </p>
+<p>​        范围查询</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRangeQuery</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    IndexSearcher indexSearcher = getIndexSearcher();</span><br><span class="line">    Query query = LongPoint.newRangeQuery(<span class="string">"size"</span>, <span class="number">0l</span>, <span class="number">10000l</span>);</span><br><span class="line">    printResult(query, indexSearcher);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="2-使用-QueryPaser-解析查询表达式"   >
+          <a href="#2-使用-QueryPaser-解析查询表达式" class="heading-link"><i class="fas fa-link"></i></a>2. 使用 QueryPaser 解析查询表达式</h3>
+      <ol>
+<li>可以对要查询的内容先分词，然后基于分词的结果进行查询。</li>
+<li>添加一个jar包 </li>
+</ol>
+<p>​        lucene-queryparser-7.4.0.jar</p>
+<figure class="highlight java"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testQueryParser</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    IndexSearcher indexSearcher = getIndexSearcher();</span><br><span class="line">    <span class="comment">//创建queryparser对象</span></span><br><span class="line">    <span class="comment">//第一个参数默认搜索的域</span></span><br><span class="line">    <span class="comment">//第二个参数就是分析器对象</span></span><br><span class="line">    QueryParser queryParser = <span class="keyword">new</span> QueryParser(<span class="string">"content"</span>, <span class="keyword">new</span> IKAnalyzer());</span><br><span class="line">    Query query = queryParser.parse(<span class="string">"Lucene是java开发的"</span>);</span><br><span class="line">    <span class="comment">//执行查询</span></span><br><span class="line">    printResult(query, indexSearcher);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printResult</span><span class="params">(Query query, IndexSearcher indexSearcher)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">//执行查询</span></span><br><span class="line">    TopDocs topDocs = indexSearcher.search(query, <span class="number">10</span>);</span><br><span class="line">    <span class="comment">//共查询到的document个数</span></span><br><span class="line">    System.out.println(<span class="string">"查询结果总数量："</span> + topDocs.totalHits);</span><br><span class="line">    <span class="comment">//遍历查询结果</span></span><br><span class="line">    <span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">        Document document = indexSearcher.doc(scoreDoc.doc);</span><br><span class="line">        System.out.println(document.get(<span class="string">"filename"</span>));</span><br><span class="line">        <span class="comment">//System.out.println(document.get("content"));</span></span><br><span class="line">        System.out.println(document.get(<span class="string">"path"</span>));</span><br><span class="line">        System.out.println(document.get(<span class="string">"size"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//关闭indexreader</span></span><br><span class="line">    indexSearcher.getIndexReader().close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://motongxue.gitee.io">Motongxue</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://motongxue.gitee.io/posts/3115972334/">https://motongxue.gitee.io/posts/3115972334/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.gitee.io/tags/lucene/">lucene</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.gitee.io/tags/%E6%A3%80%E7%B4%A2/">检索</a></span></div><div class="post-share"><div class="social-share" data-sites="qzone, qq, weibo, wechat, douban, linkedin, facebook, twitter, google">Share to: </div></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/posts/4277508012/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">SpringBoot经典学习笔记</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/posts/203698481/"><span class="paginator-prev__text">区间DP 矩阵链的乘法</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#―、什么是全文检索"><span class="toc-number">1.</span> <span class="toc-text">
+          ―、什么是全文检索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、数据的分类"><span class="toc-number">1.1.</span> <span class="toc-text">
+          1、数据的分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、数据的査词"><span class="toc-number">1.2.</span> <span class="toc-text">
+          2、数据的査词</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、全文检索"><span class="toc-number">1.3.</span> <span class="toc-text">
+          3、全文检索</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、-全文检索的应用场景"><span class="toc-number">2.</span> <span class="toc-text">
+          二、 全文检索的应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、-什么是Lucene"><span class="toc-number">3.</span> <span class="toc-text">
+          三、 什么是Lucene</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、-Lucene实现全文检索的流程"><span class="toc-number">4.</span> <span class="toc-text">
+          四、 Lucene实现全文检索的流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-创建索引"><span class="toc-number">4.1.</span> <span class="toc-text">
+          1.创建索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-查询索引"><span class="toc-number">4.2.</span> <span class="toc-text">
+          2.查询索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、入门程序"><span class="toc-number">5.</span> <span class="toc-text">
+          五、入门程序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-．创建索引"><span class="toc-number">5.1.</span> <span class="toc-text">
+          1 ．创建索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-使用-luke-查看索引库中的内容"><span class="toc-number">5.2.</span> <span class="toc-text">
+          2. 使用 luke 查看索引库中的内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-查询索引库"><span class="toc-number">5.3.</span> <span class="toc-text">
+          3. 查询索引库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、分析器"><span class="toc-number">6.</span> <span class="toc-text">
+          六、分析器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-查看分析器的分析效果"><span class="toc-number">6.1.</span> <span class="toc-text">
+          1. 查看分析器的分析效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-IKAnalyzer-的便用方法（中文分析器）"><span class="toc-number">6.2.</span> <span class="toc-text">
+          2. IKAnalyzer 的便用方法（中文分析器）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七、索引库维护"><span class="toc-number">7.</span> <span class="toc-text">
+          七、索引库维护</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Field域的属性"><span class="toc-number">7.1.</span> <span class="toc-text">
+          Field域的属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加文档"><span class="toc-number">7.2.</span> <span class="toc-text">
+          添加文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除文档"><span class="toc-number">7.3.</span> <span class="toc-text">
+          删除文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-修改文档"><span class="toc-number">7.4.</span> <span class="toc-text">
+          3. 修改文档</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#八、索引库查询"><span class="toc-number">8.</span> <span class="toc-text">
+          八、索引库查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-使用-Query-的子类"><span class="toc-number">8.1.</span> <span class="toc-text">
+          1. 使用 Query 的子类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-使用-QueryPaser-解析查询表达式"><span class="toc-number">8.2.</span> <span class="toc-text">
+          2. 使用 QueryPaser 解析查询表达式</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/Motongxue.png" alt="avatar"></div><p class="sidebar-ov-author__text">你来了，要不要坐下来喝杯茶？</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://blog.csdn.net/CrazyMooo" target="_blank" rel="noopener" data-popover="social.csdn" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">csdn</span></a><a class="sidebar-ov-social-item" href="http://wpa.qq.com/msgrd?v=3&amp;uin=393888412&amp;site=qq&amp;menu=yes" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-email"><a class="sidebar-ov-feed-email__link" href="http://moweichuan@foxmail.com" target="_blank" rel="noopener"><span class="sidebar-ov-feed-email__icon"><i class="fas fa-envelope"></i></span><span>Email 订阅</span></a></span></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Motongxue</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div><div>我抓不住世间的美好，只好装作万事顺遂的样子</div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><script>function initSearch() {
+  var isXML = true;
+  var search_path = 'search.json';
+
+  if (!search_path) {
+    search_path = 'search.xml';
+  } else if (/json$/i.test(search_path)) {
+    isXML = false;
+  }
+
+  var path = '/' + search_path;
+  $.ajax({
+    url: path,
+    dataType: isXML ? 'xml' : 'json',
+    async: true,
+    success: function (res) {
+      var datas = isXML ? $('entry', res).map(function () {
+        // 将 XML 转为 JSON
+        return {
+          title: $('title', this).text(),
+          content: $('content', this).text(),
+          url: $('url', this).text()
+        };
+      }).get() : res;
+      var $input = $('.search-input input');
+      var $result = $('.search-results');
+      // 搜索对象（标题、内容）的权重，影响显示顺序
+      var WEIGHT = { title: 100, content: 1 };
+      var searchPost = function () {
+        var searchText = $input.val().toLowerCase().trim();
+        // 根据空白字符分隔关键字
+        var keywords = searchText.split(/[\s]+/);
+        // 搜索结果
+        var matchPosts = [];
+
+        // 有多个关键字时，将原文字整个保存下来
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        // 防止未输入字符时搜索
+        if (searchText.length > 0) {
+          datas.forEach(function (data) {
+            var isMatch  = false;
+            // 没有标题的文章使用预设的 i18n 变量代替
+            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
+            var titleLower = title && title.toLowerCase();
+            // 删除 HTML 标签 和 所有空白字符
+            var content = data.content && data.content.replace(/<[^>]+>/g, '');
+            var contentLower = content && content.toLowerCase();
+            // 删除重复的 /
+            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
+            // 标题中匹配到的关键词
+            var titleHitSlice = [];
+            // 内容中匹配到的关键词
+            var contentHitSlice = [];
+
+            keywords.forEach(function (keyword) {
+              /**
+              * 获取匹配的关键词的索引
+              * @param {String} keyword 要匹配的关键字
+              * @param {String} text 原文字
+              * @param {Boolean} caseSensitive 是否区分大小写
+              * @param {Number} weight 匹配对象的权重。权重大的优先显示
+              * @return {Array}
+              */
+              function getIndexByword (word, text, caseSensitive, weight) {
+                if (!word || !text) {
+                  return [];
+                };
+
+                var startIndex = 0; // 每次匹配的开始索引
+                var index = -1;     // 匹配到的索引值
+                var result = [];    // 匹配结果
+
+                if (!caseSensitive) {
+                  word = word.toLowerCase();
+                  text = text.toLowerCase();
+                }
+
+                while((index = text.indexOf(word, startIndex)) !== -1) {
+                  var hasMatch = false;
+                  // 索引位置相同的关键词，保留长度较长的
+                  titleHitSlice.forEach(function (hit) {
+                    if (hit.index === index && hit.word.length < word.length) {
+                      hit.word = word;
+                      hasMatch = true;
+                    }
+                  });
+                  startIndex = index + word.length;
+                  !hasMatch && result.push({ index: index, word: word, weight: weight });
+                }
+                return result;
+              }
+              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
+              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
+            });
+
+            var hitTitle = titleHitSlice.length;
+            var hitContent = contentHitSlice.length;
+
+            if (hitTitle > 0 || hitContent > 0) {
+              isMatch = true;
+            }
+            if (isMatch) {
+              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
+                // 按照匹配文字的索引的递增顺序排序
+                hit.sort(function (left, right) {
+                  return left.index - right.index;
+                });
+              });
+              /**
+              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
+              * @param {String} text 原文本
+              * @param {Array} hitSlice 匹配项的索引信息
+              * @param {Number} start 开始索引
+              * @param {Number} end 结束索引
+              * @return {String}
+              */
+              function highlightKeyword (text, hitSlice, start, end) {
+                if (!text || !hitSlice || !hitSlice.length) {
+                  return;
+                }
+
+                var result = '';
+                var startIndex = start;
+                var endIndex = end;
+                hitSlice.forEach(function (hit) {
+                  if (hit.index < startIndex) {
+                    return;
+                  }
+
+                  var hitWordEnd = hit.index + hit.word.length;
+                  result += text.slice(startIndex, hit.index);
+                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
+                  startIndex = hitWordEnd;
+                });
+                result += text.slice(startIndex, endIndex);
+                return result;
+              }
+
+              var postData = {};
+              // 文章总的搜索权重
+              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
+              // 标记匹配关键词后的标题
+              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
+              // 标记匹配关键词后的内容
+              var postContent;
+              // 显示内容的长度
+              var SHOW_WORD_LENGTH = 200;
+              // 命中关键词前的字符显示长度
+              var SHOW_WORD_FRONT_LENGTH = 20;
+              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+
+              // 截取匹配的第一个字符，前后共 200 个字符来显示
+              if (contentHitSlice.length > 0) {
+                var firstIndex = contentHitSlice[0].index;
+                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
+                var end = firstIndex + SHOW_WORD_END_LENGTH;
+                postContent = highlightKeyword(content, contentHitSlice, start, end);
+              } else { // 未匹配到内容，直接截取前 200 个字符来显示
+                postContent = content.slice(0, SHOW_WORD_LENGTH);
+              }
+              postData.title = postTitle;
+              postData.content = postContent;
+              postData.url = postURL;
+              postData.weight = postWeight;
+              matchPosts.push(postData);
+            }
+          });
+        }
+
+        var resultInnerHtml = '';
+        if (matchPosts.length) {
+          // 按权重递增的顺序排序，使权重大的优先显示
+          matchPosts.sort(function (left, right) {
+            return right.weight - left.weight;
+          });
+          resultInnerHtml += '<ul>';
+          matchPosts.forEach(function (post) {
+            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
+            resultInnerHtml += post.title;
+            resultInnerHtml += '</a><div class="search-results-content">';
+            resultInnerHtml += post.content;
+            resultInnerHtml += '</div></li>';
+          });
+          resultInnerHtml += '</ul>';
+        } else {
+          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
+        }
+        $result.html(resultInnerHtml);
+      };
+      $input.on('input', searchPost);
+      $input.on('keyup', function (e) {
+        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
+          searchPost();
+        }
+      });
+    }
+  });
+}
+
+function closeSearch () {
+  $('body').css({ overflow: 'auto' });
+  $('.search-popup').css({ display: 'none' });
+  $('.search-mask').css({ display: 'none' });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  Stun.utils.pjaxReloadLocalSearch = function () {
+    $('.header-nav-search').on('click', function (e) {
+      e.stopPropagation();
+      $('body').css('overflow', 'hidden');
+      $('.search-popup')
+        .velocity('stop')
+        .velocity('transition.expandIn', {
+          duration: 300,
+          complete: function () {
+            $('.search-popup input').focus();
+          }
+        });
+      $('.search-mask')
+        .velocity('stop')
+        .velocity('transition.fadeIn', {
+          duration: 300
+        });
+
+      initSearch();
+    });
+    $('.search-mask, .search-close').on('click', function () {
+      closeSearch();
+    });
+    $(document).on('keydown', function (e) {
+      // Escape <=> 27
+      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
+        closeSearch();
+      }
+    });
+  };
+
+  Stun.utils.pjaxReloadLocalSearch();
+}, false);</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.0.0-rc.0"></script><script src="/js/stun-boot.js?v=2.0.0-rc.0"></script><script src="/js/scroll.js?v=2.0.0-rc.0"></script><script src="/js/header.js?v=2.0.0-rc.0"></script><script src="/js/sidebar.js?v=2.0.0-rc.0"></script></body></html>
