@@ -1,0 +1,390 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="renderer" content="webkit"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="32x32"><meta name="description" content="卡特兰数                           卡特兰数简介       卡特兰数推荐博文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法 卡特兰数">
+<meta property="og:url" content="https://motongxue.gitee.io/posts/3025807771/index.html">
+<meta property="og:site_name" content="Motongxue&#39;s Blog">
+<meta property="og:description" content="卡特兰数                           卡特兰数简介       卡特兰数推荐博文">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.luogu.com.cn/upload/pic/18.png">
+<meta property="og:image" content="https://cdn.luogu.com.cn/upload/pic/19.png">
+<meta property="og:image" content="https://cdn.luogu.com.cn/upload/pic/1631.png">
+<meta property="article:published_time" content="2020-05-04T15:02:33.360Z">
+<meta property="article:modified_time" content="2020-05-05T03:32:27.740Z">
+<meta property="article:author" content="Motongxue">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="数论">
+<meta property="article:tag" content="卡特兰数">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.luogu.com.cn/upload/pic/18.png"><meta name="keywords" content="Motongxue, Motongxue's Blog"><meta name="description" content=""><title>算法 卡特兰数 | Motongxue's Blog</title><link ref="canonical" href="https://motongxue.gitee.io/posts/3025807771/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0-rc.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/MyTech/"><span class="header-nav-menu-item__icon"><i class="fas fa-feather-alt"></i></span><span class="header-nav-menu-item__text">技术</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/MyLife/"><span class="header-nav-menu-item__icon"><i class="fas fa-book"></i></span><span class="header-nav-menu-item__text">生活</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">文章</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/archives/"><span class="header-nav-submenu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-submenu-item__text">归档</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/tags/"><span class="header-nav-submenu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-submenu-item__text">标签</span></a></div></div></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-angle-double-down"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Motongxue's Blog</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">算法 卡特兰数</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-05-04</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-05-05</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">1.7k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">11分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h2 id="卡特兰数"   >
+          <a href="#卡特兰数" class="heading-link"><i class="fas fa-link"></i></a>卡特兰数</h2>
+      
+        <h3 id="卡特兰数简介"   >
+          <a href="#卡特兰数简介" class="heading-link"><i class="fas fa-link"></i></a>卡特兰数简介</h3>
+      <p><span class="exturl"><a class="exturl__link"   href="https://blog.csdn.net/qq_30115697/article/details/88906534"  target="_blank" rel="noopener">卡特兰数推荐博文</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<a id="more"></a>
+<p>卡特兰数是组合数学中的一种著名数列，通常用如下通项式表示(为了不与组合数C冲突，本文用f表示卡特兰数)：<br>f(n)=C(n、2n)/(n+1)<br>当然，卡特兰数也是有递推式的：<br>f(n)=∑(n−1、i=0)f(i)×f(n−i−1)<br>但在实际应用中，最常用的却是第一个通项式的变形：<br>f(n)=C(n、2n)−C(n−1、2n)</p>
+<ol>
+<li><p><strong>给定节点组成二叉搜索树</strong></p>
+<p>给定N个节点，能构成多少种不同的二叉搜索树？(f(n)种)</p>
+</li>
+<li><p><strong>扩号化</strong></p>
+<p>矩阵连乘： P=a1×a2×a3×……×an，依据乘法结合律，不改变其顺序，只用括号表示成对的乘积，试问有几种括号化的方案？(f(n)种)</p>
+</li>
+<li><p><strong>出栈次序</strong></p>
+<p>一个栈(无穷大)的进栈序列为1，2，3，…，n，有多少个不同的出栈序列?(f(n)种)</p>
+</li>
+<li><p><strong>凸多边形三角划分</strong></p>
+<p>在一个凸多边形中，通过若干条互不相交的对角线，把这个多边形划分成了若干个三角形。任务是键盘上输入凸多边形的边数n，求不同划分的方案数f（n）。</p>
+</li>
+<li><p><strong>n对括号正确匹配数目</strong></p>
+<p>给定n对括号，求括号正确配对的字符串数</p>
+</li>
+<li><p><strong>霍比特人和兽人排队买票问题</strong> （下文矩阵II问题）</p>
+</li>
+</ol>
+
+        <h3 id="栈"   >
+          <a href="#栈" class="heading-link"><i class="fas fa-link"></i></a>栈</h3>
+      <p><strong>题目描述</strong> </p>
+<p><img src="https://cdn.luogu.com.cn/upload/pic/18.png" alt="img"></p>
+<p>宁宁考虑的是这样一个问题：一个操作数序列，1,2,…,n（图示为 1 到 3 的情况），栈 A 的深度大于 n。</p>
+<p>现在可以进行两种操作，</p>
+<ol>
+<li>将一个数，从操作数序列的头端移到栈的头端（对应数据结构栈的 push 操作）</li>
+<li>将一个数，从栈的头端移到输出序列的尾端（对应数据结构栈的 pop 操作）</li>
+</ol>
+<p>使用这两种操作，由一个操作数序列就可以得到一系列的输出序列，下图所示为由 <code>1 2 3</code> 生成序列 <code>2 3 1</code> 的过程。</p>
+<p><img src="https://cdn.luogu.com.cn/upload/pic/19.png" alt="img"></p>
+<p>（原始状态如上图所示）</p>
+<p>你的程序将对给定的 n，计算并输出由操作数序列 1,2,…,n 经过操作可能得到的输出序列的总数。</p>
+<p><strong>输入格式</strong></p>
+<p>输入文件只含一个整数 n（1≤n≤18）。</p>
+<p><strong>输出格式</strong></p>
+<p>输出文件只有一行，即可能输出序列的总数目。</p>
+<p><strong>输入 #1</strong></p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>输出 #1</strong> </p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5</span><br></pre></td></tr></table></div></figure>
+
+<figure class="highlight c++"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">110</span>]=&#123;<span class="number">1</span>&#125;,n,t,i,j;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;i;j++)&#123;</span><br><span class="line">            a[i] += a[j] * a[i-j<span class="number">-1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;a[n];    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="矩阵II"   >
+          <a href="#矩阵II" class="heading-link"><i class="fas fa-link"></i></a>矩阵II</h3>
+      <p><strong>Problem</strong></p>
+<p>众所周知，在中国古代算筹中，红为正，黑为负……</p>
+<p>给定一个1<em>(2n)的矩阵（usqwedf：这不是一个2n的队列么），现让你自由地放入红色算筹和黑色算筹，使矩阵平衡[即对于所有的i(1&lt;=i&lt;=2n)，*</em>使第1~i格中红色算筹个数大于等于黑色算筹]**</p>
+<p>问有多少种方案满足矩阵平衡。</p>
+<p><strong>输入 #1</strong> </p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2 1&lt;&#x3D;n&lt;&#x3D;100</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>输出 #1</strong></p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2  方案数t对100取模</span><br></pre></td></tr></table></div></figure>
+
+<figure class="highlight c++"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">110</span>]=&#123;<span class="number">1</span>&#125;,n,t,i,j;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;i;j++)&#123;</span><br><span class="line">            a[i] += a[j] * a[i-j<span class="number">-1</span>];</span><br><span class="line">            a[i] %= <span class="number">100</span>；</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;a[n];    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="鸡蛋饼"   >
+          <a href="#鸡蛋饼" class="heading-link"><i class="fas fa-link"></i></a>鸡蛋饼</h3>
+      <p><strong>题目描述</strong> </p>
+<p>最近小 x 又发现了一个关于圆的有趣的问题：在圆上有 2N 个不同的点，小 x 想用 N 条线段把这些点连接起来（每个点只能连一条线段）， 使所有的线段都不相交，他想知道这样的连接方案有多少种？</p>
+<p><strong>输入格式</strong> </p>
+<p>有且仅有一个正整数 N 。 （N≤2999）</p>
+<p><strong>输出格式</strong></p>
+<p>要求的方案数（结果 mod100000007）。</p>
+<p><strong>输入 #1</strong> </p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">24</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>输出 #1</strong> </p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4057031</span><br></pre></td></tr></table></div></figure>
+
+<figure class="highlight c++"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*那么假如我们在圆上画了2n个点，顺时针编号为1,2,3,4……，你便会发现，如果一个奇数点和另一个奇数点相连，一定会造成将剩下所没有连线的点分在两边的都是奇数个，而后两边必定有一个点没线连或穿越其中的一条线，那么就不可能完成了。那么我们可以把奇数点看成左括号，偶数点看成右括号，然后把圆切开，就变成了一个括号匹配的方案数问题。为什么圆可以切开呢？因为A连B和B连A是同一种切法。</span></span><br><span class="line"><span class="comment">在这里可以用h(n)=C(2n,n)/(n+1),用扩展欧几里德求逆元。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">3100</span>]=&#123;<span class="number">1</span>&#125;,n,t,i,j;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;i;j++)&#123;</span><br><span class="line">            a[i] += a[j] * a[i-j<span class="number">-1</span>];</span><br><span class="line">            a[i] %= <span class="number">100000007</span>；</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;a[n];    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="树屋阶梯"   >
+          <a href="#树屋阶梯" class="heading-link"><i class="fas fa-link"></i></a>树屋阶梯</h3>
+      <p><strong>题目描述：</strong></p>
+<p>暑假期间，小龙报名了一个模拟野外生存作战训练班来锻炼体魄，训练的第一个晚上，教官就给他们出了个难题。由于地上露营湿气重，必须选择在高处的树屋露营。小龙分配的树屋建立在一颗高度为N+1尺（N为正整数）的大树上，正当他发愁怎么爬上去的时候，发现旁边堆满了一些空心四方钢材（如图1.1），经过观察和测量，这些钢材截面的宽和高大小不一，但都是1尺的整数倍，教官命令队员们每人选取N个空心钢材来搭建一个总高度为N尺的阶梯来进入树屋，该阶梯每一步台阶的高度为1尺，宽度也为1尺。如果这些钢材有各种尺寸，且每种尺寸数量充足，那么小龙可以有多少种搭建方法？（注：为了避免夜里踏空，钢材空心的一面绝对不可以向上。）</p>
+<p><strong>输入格式：</strong></p>
+<p>一个正整数 N(1≤N≤500)，表示阶梯的高度</p>
+<p><strong>输出格式：</strong> </p>
+<p>一个正整数，表示搭建方法的个数。（注：搭建方法个数可能很大。）</p>
+<p><strong>输入样例：</strong></p>
+<p>3</p>
+<p><strong>输出样例：</strong></p>
+<p>5</p>
+<p><img src="https://cdn.luogu.com.cn/upload/pic/1631.png" alt="img"></p>
+<p><strong>思路：</strong> </p>
+<p>这里有 N 个拐角，而题目只允许我们放 N 个矩形，也就是说，<strong>每个矩形恰好覆盖一个拐角</strong>。从而分为上和右两个问题，从而递归解决</p>
+<figure class="highlight python"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 卡特兰数递推公式： h(n)= (2n)! / ((n+1)!⋅n!)</span></span><br><span class="line"><span class="comment">#引用math库</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="comment">#定义组合数函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">C</span><span class="params">(n,m)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> math.factorial(n)//math.factorial(m)//math.factorial(n-m)</span><br><span class="line">    <span class="comment">#引用阶乘求组合数 //为地板除 返回int 向下取整</span></span><br><span class="line">    <span class="comment">#而如果用/则会返回float导致其他问题</span></span><br><span class="line">n=int(input())</span><br><span class="line">print(C(<span class="number">2</span>*n,n)-C(<span class="number">2</span>*n,n<span class="number">-1</span>))</span><br></pre></td></tr></table></div></figure></div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://motongxue.gitee.io">Motongxue</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://motongxue.gitee.io/posts/3025807771/">https://motongxue.gitee.io/posts/3025807771/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.gitee.io/tags/%E7%AE%97%E6%B3%95/">算法</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.gitee.io/tags/%E6%95%B0%E8%AE%BA/">数论</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.gitee.io/tags/%E5%8D%A1%E7%89%B9%E5%85%B0%E6%95%B0/">卡特兰数</a></span></div><div class="post-share"><div class="social-share" data-sites="qzone, qq, weibo, wechat, douban, linkedin, facebook, twitter, google">Share to: </div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/posts/3732306655/"><span class="paginator-prev__text">并查集 月亮之眼</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#卡特兰数"><span class="toc-number">1.</span> <span class="toc-text">
+          卡特兰数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#卡特兰数简介"><span class="toc-number">1.1.</span> <span class="toc-text">
+          卡特兰数简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#栈"><span class="toc-number">1.2.</span> <span class="toc-text">
+          栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#矩阵II"><span class="toc-number">1.3.</span> <span class="toc-text">
+          矩阵II</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#鸡蛋饼"><span class="toc-number">1.4.</span> <span class="toc-text">
+          鸡蛋饼</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#树屋阶梯"><span class="toc-number">1.5.</span> <span class="toc-text">
+          树屋阶梯</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/Motongxue.png" alt="avatar"></div><p class="sidebar-ov-author__text">你来了，要不要坐下来喝杯茶？</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://blog.csdn.net/CrazyMooo" target="_blank" rel="noopener" data-popover="social.csdn" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">csdn</span></a><a class="sidebar-ov-social-item" href="http://wpa.qq.com/msgrd?v=3&amp;uin=393888412&amp;site=qq&amp;menu=yes" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-email"><a class="sidebar-ov-feed-email__link" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=393888412@qq.com" target="_blank" rel="noopener"><span class="sidebar-ov-feed-email__icon"><i class="fas fa-envelope"></i></span><span>Email 订阅</span></a></span></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">15</div><div class="sidebar-ov-state-item__name">分类</div></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Motongxue</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div><div>我抓不住世间的美好，只好装作万事顺遂的样子</div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><script>function initSearch() {
+  var isXML = true;
+  var search_path = 'search.json';
+
+  if (!search_path) {
+    search_path = 'search.xml';
+  } else if (/json$/i.test(search_path)) {
+    isXML = false;
+  }
+
+  var path = '/' + search_path;
+  $.ajax({
+    url: path,
+    dataType: isXML ? 'xml' : 'json',
+    async: true,
+    success: function (res) {
+      var datas = isXML ? $('entry', res).map(function () {
+        // 将 XML 转为 JSON
+        return {
+          title: $('title', this).text(),
+          content: $('content', this).text(),
+          url: $('url', this).text()
+        };
+      }).get() : res;
+      var $input = $('.search-input input');
+      var $result = $('.search-results');
+      // 搜索对象（标题、内容）的权重，影响显示顺序
+      var WEIGHT = { title: 100, content: 1 };
+      var searchPost = function () {
+        var searchText = $input.val().toLowerCase().trim();
+        // 根据空白字符分隔关键字
+        var keywords = searchText.split(/[\s]+/);
+        // 搜索结果
+        var matchPosts = [];
+
+        // 有多个关键字时，将原文字整个保存下来
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        // 防止未输入字符时搜索
+        if (searchText.length > 0) {
+          datas.forEach(function (data) {
+            var isMatch  = false;
+            // 没有标题的文章使用预设的 i18n 变量代替
+            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
+            var titleLower = title && title.toLowerCase();
+            // 删除 HTML 标签 和 所有空白字符
+            var content = data.content && data.content.replace(/<[^>]+>/g, '');
+            var contentLower = content && content.toLowerCase();
+            // 删除重复的 /
+            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
+            // 标题中匹配到的关键词
+            var titleHitSlice = [];
+            // 内容中匹配到的关键词
+            var contentHitSlice = [];
+
+            keywords.forEach(function (keyword) {
+              /**
+              * 获取匹配的关键词的索引
+              * @param {String} keyword 要匹配的关键字
+              * @param {String} text 原文字
+              * @param {Boolean} caseSensitive 是否区分大小写
+              * @param {Number} weight 匹配对象的权重。权重大的优先显示
+              * @return {Array}
+              */
+              function getIndexByword (word, text, caseSensitive, weight) {
+                if (!word || !text) {
+                  return [];
+                };
+
+                var startIndex = 0; // 每次匹配的开始索引
+                var index = -1;     // 匹配到的索引值
+                var result = [];    // 匹配结果
+
+                if (!caseSensitive) {
+                  word = word.toLowerCase();
+                  text = text.toLowerCase();
+                }
+
+                while((index = text.indexOf(word, startIndex)) !== -1) {
+                  var hasMatch = false;
+                  // 索引位置相同的关键词，保留长度较长的
+                  titleHitSlice.forEach(function (hit) {
+                    if (hit.index === index && hit.word.length < word.length) {
+                      hit.word = word;
+                      hasMatch = true;
+                    }
+                  });
+                  startIndex = index + word.length;
+                  !hasMatch && result.push({ index: index, word: word, weight: weight });
+                }
+                return result;
+              }
+              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
+              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
+            });
+
+            var hitTitle = titleHitSlice.length;
+            var hitContent = contentHitSlice.length;
+
+            if (hitTitle > 0 || hitContent > 0) {
+              isMatch = true;
+            }
+            if (isMatch) {
+              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
+                // 按照匹配文字的索引的递增顺序排序
+                hit.sort(function (left, right) {
+                  return left.index - right.index;
+                });
+              });
+              /**
+              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
+              * @param {String} text 原文本
+              * @param {Array} hitSlice 匹配项的索引信息
+              * @param {Number} start 开始索引
+              * @param {Number} end 结束索引
+              * @return {String}
+              */
+              function highlightKeyword (text, hitSlice, start, end) {
+                if (!text || !hitSlice || !hitSlice.length) {
+                  return;
+                }
+
+                var result = '';
+                var startIndex = start;
+                var endIndex = end;
+                hitSlice.forEach(function (hit) {
+                  if (hit.index < startIndex) {
+                    return;
+                  }
+
+                  var hitWordEnd = hit.index + hit.word.length;
+                  result += text.slice(startIndex, hit.index);
+                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
+                  startIndex = hitWordEnd;
+                });
+                result += text.slice(startIndex, endIndex);
+                return result;
+              }
+
+              var postData = {};
+              // 文章总的搜索权重
+              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
+              // 标记匹配关键词后的标题
+              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
+              // 标记匹配关键词后的内容
+              var postContent;
+              // 显示内容的长度
+              var SHOW_WORD_LENGTH = 200;
+              // 命中关键词前的字符显示长度
+              var SHOW_WORD_FRONT_LENGTH = 20;
+              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+
+              // 截取匹配的第一个字符，前后共 200 个字符来显示
+              if (contentHitSlice.length > 0) {
+                var firstIndex = contentHitSlice[0].index;
+                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
+                var end = firstIndex + SHOW_WORD_END_LENGTH;
+                postContent = highlightKeyword(content, contentHitSlice, start, end);
+              } else { // 未匹配到内容，直接截取前 200 个字符来显示
+                postContent = content.slice(0, SHOW_WORD_LENGTH);
+              }
+              postData.title = postTitle;
+              postData.content = postContent;
+              postData.url = postURL;
+              postData.weight = postWeight;
+              matchPosts.push(postData);
+            }
+          });
+        }
+
+        var resultInnerHtml = '';
+        if (matchPosts.length) {
+          // 按权重递增的顺序排序，使权重大的优先显示
+          matchPosts.sort(function (left, right) {
+            return right.weight - left.weight;
+          });
+          resultInnerHtml += '<ul>';
+          matchPosts.forEach(function (post) {
+            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
+            resultInnerHtml += post.title;
+            resultInnerHtml += '</a><div class="search-results-content">';
+            resultInnerHtml += post.content;
+            resultInnerHtml += '</div></li>';
+          });
+          resultInnerHtml += '</ul>';
+        } else {
+          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
+        }
+        $result.html(resultInnerHtml);
+      };
+      $input.on('input', searchPost);
+      $input.on('keyup', function (e) {
+        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
+          searchPost();
+        }
+      });
+    }
+  });
+}
+
+function closeSearch () {
+  $('body').css({ overflow: 'auto' });
+  $('.search-popup').css({ display: 'none' });
+  $('.search-mask').css({ display: 'none' });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  Stun.utils.pjaxReloadLocalSearch = function () {
+    $('.header-nav-search').on('click', function (e) {
+      e.stopPropagation();
+      $('body').css('overflow', 'hidden');
+      $('.search-popup')
+        .velocity('stop')
+        .velocity('transition.expandIn', {
+          duration: 300,
+          complete: function () {
+            $('.search-popup input').focus();
+          }
+        });
+      $('.search-mask')
+        .velocity('stop')
+        .velocity('transition.fadeIn', {
+          duration: 300
+        });
+
+      initSearch();
+    });
+    $('.search-mask, .search-close').on('click', function () {
+      closeSearch();
+    });
+    $(document).on('keydown', function (e) {
+      // Escape <=> 27
+      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
+        closeSearch();
+      }
+    });
+  };
+
+  Stun.utils.pjaxReloadLocalSearch();
+}, false);</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.0.0-rc.0"></script><script src="/js/stun-boot.js?v=2.0.0-rc.0"></script><script src="/js/scroll.js?v=2.0.0-rc.0"></script><script src="/js/header.js?v=2.0.0-rc.0"></script><script src="/js/sidebar.js?v=2.0.0-rc.0"></script></body></html>
