@@ -1255,15 +1255,6 @@ kbd {
   max-height: 70vh;
   white-space: nowrap;
 }
-.sidebar-toc .toc-child {
-  display: none;
-}
-.sidebar-toc .active > .toc-child {
-  display: block;
-}
-.sidebar-toc .current > .toc-child {
-  display: block;
-}
 .sidebar-toc .active > a,
 .sidebar-toc .current > a {
   color: #fc6423;

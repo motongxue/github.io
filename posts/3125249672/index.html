@@ -1,0 +1,671 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="renderer" content="webkit"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="32x32"><meta name="baidu-site-verification" content="&lt;meta name=&quot;baidu-site-verification&quot; content=&quot;7qrvxnH6OF&quot; /&gt;"><meta name="360-site-verification" content="&lt;meta name=&quot;360-site-verification&quot; content=&quot;2c4206decb5f50ba8c3c176299f061a6&quot; /&gt;"><meta name="sogou_site_verification" content="&lt;meta name=&quot;sogou_site_verification&quot; content=&quot;CHFC4tSZrs&quot;/&gt;"><meta name="description" content="1.Linux下使用FastDFS       本教程所有操作均在CentOS 6.x环境下进行。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术 FastDFS在服务器上的安装">
+<meta property="og:url" content="https://motongxue.github.io/posts/3125249672/index.html">
+<meta property="og:site_name" content="Motongxue&#39;s Blog">
+<meta property="og:description" content="1.Linux下使用FastDFS       本教程所有操作均在CentOS 6.x环境下进行。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://q9w6aimkr.bkt.clouddn.com/20200514132900.png">
+<meta property="og:image" content="http://q9w6aimkr.bkt.clouddn.com/20200514132956.png">
+<meta property="og:image" content="http://q9w6aimkr.bkt.clouddn.com/20200514133012.png">
+<meta property="og:image" content="http://q9w6aimkr.bkt.clouddn.com/20200514133036.png">
+<meta property="og:image" content="http://q9w6aimkr.bkt.clouddn.com/20200514133052.png">
+<meta property="og:image" content="http://q9w6aimkr.bkt.clouddn.com/20200514133109.png">
+<meta property="article:published_time" content="2020-05-14T05:34:34.442Z">
+<meta property="article:modified_time" content="2020-05-14T05:36:55.045Z">
+<meta property="article:author" content="Motongxue">
+<meta property="article:tag" content="FastDFS">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="文件上传">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://q9w6aimkr.bkt.clouddn.com/20200514132900.png"><meta name="keywords" content="Motongxue, Motongxue's Blog"><meta name="description" content=""><title>技术 FastDFS在服务器上的安装 | Motongxue's Blog</title><link ref="canonical" href="https://motongxue.github.io/posts/3125249672/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0-rc.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: {"avoidBanner":false},
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/MyTech/"><span class="header-nav-menu-item__icon"><i class="fas fa-feather-alt"></i></span><span class="header-nav-menu-item__text">技术</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/MyLife/"><span class="header-nav-menu-item__icon"><i class="fas fa-book"></i></span><span class="header-nav-menu-item__text">生活</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">文章</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/archives/"><span class="header-nav-submenu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-submenu-item__text">归档</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/tags/"><span class="header-nav-submenu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-submenu-item__text">标签</span></a></div></div></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-angle-double-down"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Motongxue's Blog</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">技术 FastDFS在服务器上的安装</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-05-14</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-05-14</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">2k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">16分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="1-Linux下使用FastDFS"   >
+          <a href="#1-Linux下使用FastDFS" class="heading-link"><i class="fas fa-link"></i></a>1.Linux下使用FastDFS</h1>
+      <p><strong>本教程所有操作均在CentOS 6.x环境下进行。</strong></p>
+<a id="more"></a>
+
+<p>将课前资料中的所需文件，上传到/usr/local/leyou目录下：</p>
+<p><img src="http://q9w6aimkr.bkt.clouddn.com/20200514132900.png" alt=""></p>
+
+        <h2 id="1-1-单节点FastDFS"   >
+          <a href="#1-1-单节点FastDFS" class="heading-link"><i class="fas fa-link"></i></a>1.1.单节点FastDFS</h2>
+      <p>整个安装过程非常复杂，很容易出错，建议进行多次备份。</p>
+<p>我们这里不打算安装多台虚拟机，因此会把tracker和storage都安装在一起。</p>
+
+        <h3 id="1-1-1-安装gcc"   >
+          <a href="#1-1-1-安装gcc" class="heading-link"><i class="fas fa-link"></i></a>1.1.1.安装gcc</h3>
+      <p>GCC用来对C语言代码进行编译运行，使用yum命令安装：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gcc</span><br></pre></td></tr></table></div></figure>
+
+<p>后面会用到解压命令（unzip），所以这里可以用yum把unzip 也装一下</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y unzip zip</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="1-1-2-安装libevent"   >
+          <a href="#1-1-2-安装libevent" class="heading-link"><i class="fas fa-link"></i></a>1.1.2.安装libevent</h3>
+      <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install libevent</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="1-1-3-安装libfastcommon-master"   >
+          <a href="#1-1-3-安装libfastcommon-master" class="heading-link"><i class="fas fa-link"></i></a>1.1.3.安装libfastcommon-master</h3>
+      <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">解压刚刚上传的libfastcommon-master.zip</span><br><span class="line">unzip libfastcommon-master.zip</span><br><span class="line"></span><br><span class="line">进入解压完成的目录</span><br><span class="line">cd libfastcommon-master</span><br><span class="line"></span><br><span class="line">编译并且安装：</span><br><span class="line">./make.sh </span><br><span class="line">./make.sh install</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="1-1-4-安装fastdfs"   >
+          <a href="#1-1-4-安装fastdfs" class="heading-link"><i class="fas fa-link"></i></a>1.1.4.安装fastdfs</h3>
+      <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf FastDFS_v5.08.tar.gz</span><br><span class="line"></span><br><span class="line">cd FastDFS</span><br><span class="line"></span><br><span class="line">./make.sh </span><br><span class="line"></span><br><span class="line">./make.sh install</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>如果安装成功，会看到/etc/init.d/下看到提供的脚本文件：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll /etc/init.d/ | grep fdfs</span><br></pre></td></tr></table></div></figure>
+
+<p><img src="http://q9w6aimkr.bkt.clouddn.com/20200514132956.png" alt=""></p>
+<ul>
+<li><code>fdfs_trackerd</code> 是tracker启动脚本</li>
+<li><code>fdfs_storaged</code> 是storage启动脚本</li>
+</ul>
+<p>能够在 /etc/fdfs/ 目录下看到默认的配置文件模板：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll /etc/fdfs/</span><br></pre></td></tr></table></div></figure>
+
+<p><img src="http://q9w6aimkr.bkt.clouddn.com/20200514133012.png" alt=""></p>
+<ul>
+<li><code>tarcker.conf.sample</code> 是tracker的配置文件模板</li>
+<li><code>storage.conf.sample</code> 是storage的配置文件模板</li>
+<li><code>client.conf.sample</code> 是客户端的配置文件模板</li>
+</ul>
+
+        <h3 id="1-1-5-配置并启动tracker服务"   >
+          <a href="#1-1-5-配置并启动tracker服务" class="heading-link"><i class="fas fa-link"></i></a>1.1.5.配置并启动tracker服务</h3>
+      <p>FastDFS的tracker和storage在刚刚的安装过程中，都已经被安装了，因此我们安装这两种角色的方式是一样的。不同的是，两种需要不同的配置文件。</p>
+<p>我们要启动tracker，就修改刚刚看到的<code>tarcker.conf</code>，并且启动<code>fdfs_trackerd</code>脚本即可。</p>
+<p>1）首先将模板文件复制</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/fdfs/tracker.conf.sample /etc/fdfs/tracker.conf</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>2）修改复制后的配置文件：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/fdfs/tracker.conf</span><br></pre></td></tr></table></div></figure>
+
+<p># 修改的内容如下：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">base_path=/leyou/tracker                 # 存储日志和数据的根目录</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>3）新建目录：     </p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /leyou/tracker</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>注意：关闭防火墙：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig iptables off</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>4）启动和停止</p>
+<p>启动tracker服务器:     <code>/etc/init.d/fdfs_trackerd start</code></p>
+<p>停止tracker服务器:     <code>/etc/init.d/fdfs_trackerd stop</code></p>
+<p>不过安装过程中，fdfs已经被设置为系统服务，我们可以采用熟悉的服务启动方式：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service fdfs_trackerd start # 启动fdfs_trackerd服务，停止用stop</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>检查FastDFS Tracker Server是否启动成功：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep fdfs_trackerd</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>设置tracker服务开机启动:</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig fdfs_trackerd on</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="1-1-6-配置并启动storage服务"   >
+          <a href="#1-1-6-配置并启动storage服务" class="heading-link"><i class="fas fa-link"></i></a>1.1.6.配置并启动storage服务</h3>
+      <p>1）首先将模板文件复制</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/fdfs/storage.conf.sample /etc/fdfs/storage.conf</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>2）修改复制后的配置文件：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/fdfs/storage.conf</span><br></pre></td></tr></table></div></figure>
+
+<p># 修改的内容如下: </p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">base_path=/leyou/storage                 # 数据和日志文件存储根目录 </span><br><span class="line"></span><br><span class="line">store_path0=/leyou/storage           # 第一个存储目录 </span><br><span class="line"></span><br><span class="line">tracker_server=192.168.56.101:22122       #  tracker服务器IP和端口</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>3）新建目录：     </p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;leyou&#x2F;storage</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>注意关闭防火墙：   <code>chkconfig iptables off</code></p>
+<p>4）启动和停止</p>
+<p>启动storage服务器：<code>/etc/init.d/fdfs_storaged start</code></p>
+<p>停止storage服务器：<code>/etc/init.d/fdfs_storaged stop</code></p>
+<p>推荐使用：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service fdfs_storaged start  # 启动fdfs_storaged服务，停止用stop</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>设置storage服务开机启动：</p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig fdfs_storaged on</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>ps -ef | grep fdfs</p>
+<p><img src="http://q9w6aimkr.bkt.clouddn.com/20200514133036.png" alt=""></p>
+
+        <h1 id="2-使用nginx访问FastDFS"   >
+          <a href="#2-使用nginx访问FastDFS" class="heading-link"><i class="fas fa-link"></i></a>2.使用nginx访问FastDFS</h1>
+      
+        <h2 id="2-1-为什么需要用Nginx访问？"   >
+          <a href="#2-1-为什么需要用Nginx访问？" class="heading-link"><i class="fas fa-link"></i></a>2.1.为什么需要用Nginx访问？</h2>
+      <p>FastDFS通过Tracker服务器,将文件放在Storage服务器存储，但是同组存储服务器之间需要进入文件复制，有同步延迟的问题。</p>
+<p>假设Tracker服务器将文件上传到了192.168.4.125（服务器的IP），上传成功后文件ID已经返回给客户端。此时FastDFS存储集群机制会将这个文件同步到同组存储192.168.4.126（服务器的IP），在文件还没有复制完成的情况下，客户端如果用这个文件ID在192.168.4.126上取文件,就会出现文件无法访问的错误。</p>
+<p>而fastdfs-nginx-module可以重定向文件连接到文件上传时的源服务器取文件,避免客户端由于复制延迟导致的文件无法访问错误</p>
+
+        <h2 id="2-2-安装fastdfs-nginx-module"   >
+          <a href="#2-2-安装fastdfs-nginx-module" class="heading-link"><i class="fas fa-link"></i></a>2.2.安装fastdfs-nginx-module</h2>
+      
+        <h3 id="2-2-1-解压"   >
+          <a href="#2-2-1-解压" class="heading-link"><i class="fas fa-link"></i></a>2.2.1.解压</h3>
+      <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf fastdfs-nginx-module_v1.16.tar.gz</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="2-2-2-修改config"   >
+          <a href="#2-2-2-修改config" class="heading-link"><i class="fas fa-link"></i></a>2.2.2.修改config</h3>
+      <p>1）进入src目录</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd fastdfs-nginx-module/src/</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>2）编辑config</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim config</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>使用以下底行命令：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:%s+/usr/local/+/usr/+g</span><br></pre></td></tr></table></div></figure>
+
+<p>将所有的/usr/local替换为 /usr，这个才是正确的目录:</p>
+<p><img src="http://q9w6aimkr.bkt.clouddn.com/20200514133052.png" alt=""></p>
+
+        <h3 id="2-2-3-配置nginx与FastDFS关联配置文件"   >
+          <a href="#2-2-3-配置nginx与FastDFS关联配置文件" class="heading-link"><i class="fas fa-link"></i></a>2.2.3.配置nginx与FastDFS关联配置文件</h3>
+      <p>复制 fastdfs-nginx-module 源码中的配置文件到/etc/fdfs 目录， 并修改</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/local/leyou/fastdfs-nginx-module/src/mod_fastdfs.conf /etc/fdfs/</span><br><span class="line"></span><br><span class="line">vi /etc/fdfs/mod_fastdfs.conf</span><br></pre></td></tr></table></div></figure>
+
+<p>修改以下配置：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">connect_timeout=10                       # 客户端访问文件连接超时时长（单位：秒）</span><br><span class="line"></span><br><span class="line">tracker_server=192.168.56.101:22122    # tracker服务IP和端口</span><br><span class="line"></span><br><span class="line">url_have_group_name=true                # 访问链接前缀加上组名</span><br><span class="line"></span><br><span class="line">store_path0=/leyou/storage            # 文件存储路径</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>复制 FastDFS 的部分配置文件到/etc/fdfs 目录</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/leyou/FastDFS/conf/</span><br><span class="line">cp http.conf mime.types /etc/fdfs/</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h2 id="2-3-安装Nginx的插件"   >
+          <a href="#2-3-安装Nginx的插件" class="heading-link"><i class="fas fa-link"></i></a>2.3.安装Nginx的插件</h2>
+      
+        <h3 id="2-3-1-如果没有安装过nginx"   >
+          <a href="#2-3-1-如果没有安装过nginx" class="heading-link"><i class="fas fa-link"></i></a>2.3.1.如果没有安装过nginx</h3>
+      <ul>
+<li>安装nginx的依赖库</li>
+</ul>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install gcc pcre pcre-devel zlib zlib-devel openssl openssl-devel</span><br></pre></td></tr></table></div></figure>
+
+
+
+<ul>
+<li>解压安装包</li>
+</ul>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf nginx-1.10.0.tar.gz</span><br></pre></td></tr></table></div></figure>
+
+
+
+<ul>
+<li>配置nginx安装包，并指定fastdfs-nginx-model</li>
+</ul>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd nginx-1.10.0</span><br><span class="line"></span><br><span class="line">./configure --prefix=/opt/nginx --sbin-path=/usr/bin/nginx --add-module=/usr/local/leyou/fastdfs-nginx-module/src</span><br></pre></td></tr></table></div></figure>
+
+<p><strong>注意</strong>：在执行./configure配置nginx参数的时候，需要将fastdfs-nginx-moudle源码作为模块编译进去。</p>
+<ul>
+<li>编译并安装</li>
+</ul>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h3 id="2-3-2-如果已经安装过nginx"   >
+          <a href="#2-3-2-如果已经安装过nginx" class="heading-link"><i class="fas fa-link"></i></a>2.3.2.如果已经安装过nginx</h3>
+      <p>1） 进入nginx目录：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/leyou/nginx-1.10.0/</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>2） 配置FastDFS 模块</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/opt/nginx --sbin-path=/usr/bin/nginx --add-module=/usr/local/leyou/fastdfs-nginx-module/src</span><br></pre></td></tr></table></div></figure>
+
+<p>注意：这次配置时，要添加fastdfs-nginx-moudle模块</p>
+<p>3） 编译，注意，这次不要安装（install）</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>4） 替换nginx二进制文件:</p>
+<p>备份：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv /usr/bin/nginx /usr/bin/nginx-bak</span><br></pre></td></tr></table></div></figure>
+
+<p>用新编译的nginx启动文件替代原来的：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp objs/nginx /usr/bin/</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+
+
+        <h3 id="2-3-3-启动nginx"   >
+          <a href="#2-3-3-启动nginx" class="heading-link"><i class="fas fa-link"></i></a>2.3.3.启动nginx</h3>
+      <p>配置nginx整合fastdfs-module模块</p>
+<p>我们需要修改nginx配置文件，在/opt/nginx/config/nginx.conf文件中：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim  /opt/nginx/conf/nginx.conf</span><br></pre></td></tr></table></div></figure>
+
+<p>将文件中，原来的<code>server 80{ ...}</code> 部分代码替换为如下代码：</p>
+<figure class="highlight nginx"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  image.leyou.com;</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 监听域名中带有group的，交给FastDFS模块处理</span></span><br><span class="line">    <span class="attribute">location</span> ~/group([<span class="number">0</span>-<span class="number">9</span>])/ &#123;</span><br><span class="line">        ngx_fastdfs_module;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">location</span> / &#123;</span><br><span class="line">        <span class="attribute">root</span>   html;</span><br><span class="line">        <span class="attribute">index</span>  index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">error_page</span>   <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span>  /50x.html;</span><br><span class="line">    <span class="attribute">location</span> = /50x.html &#123;</span><br><span class="line">        <span class="attribute">root</span>   html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+
+<p>启动nginx：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">nginx	# 启动nginx</span><br><span class="line"></span><br><span class="line">nginx -s stop	# 停止nginx</span><br><span class="line"></span><br><span class="line">nginx -s reload	# 重新载入配置文件</span><br></pre></td></tr></table></div></figure>
+
+<p># 可通过ps -ef | grep nginx查看nginx是否已启动成功    </p>
+<p><img src="http://q9w6aimkr.bkt.clouddn.com/20200514133109.png" alt=""></p>
+
+        <h3 id="2-3-4-设置nginx开机启动"   >
+          <a href="#2-3-4-设置nginx开机启动" class="heading-link"><i class="fas fa-link"></i></a>2.3.4.设置nginx开机启动</h3>
+      <p>创建一个开机启动的脚本：</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/init.d/nginx</span><br></pre></td></tr></table></div></figure>
+
+<p>添加以下内容：</p>
+<figure class="highlight sh"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># nginx - this script starts and stops the nginx daemon</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># chkconfig:   - 85 15</span></span><br><span class="line"><span class="comment"># description:  NGINX is an HTTP(S) server, HTTP(S) reverse \</span></span><br><span class="line"><span class="comment">#               proxy and IMAP/POP3 proxy server</span></span><br><span class="line"><span class="comment"># processname: nginx</span></span><br><span class="line"><span class="comment"># config:      /etc/nginx/nginx.conf</span></span><br><span class="line"><span class="comment"># config:      /etc/sysconfig/nginx</span></span><br><span class="line"><span class="comment"># pidfile:     /var/run/nginx.pid</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Source function library.</span></span><br><span class="line">. /etc/rc.d/init.d/<span class="built_in">functions</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Source networking configuration.</span></span><br><span class="line">. /etc/sysconfig/network</span><br><span class="line"></span><br><span class="line"><span class="comment"># Check that networking is up.</span></span><br><span class="line">[ <span class="string">"<span class="variable">$NETWORKING</span>"</span> = <span class="string">"no"</span> ] &amp;&amp; <span class="built_in">exit</span> 0</span><br><span class="line"></span><br><span class="line">nginx=<span class="string">"/usr/bin/nginx"</span></span><br><span class="line">prog=$(basename <span class="variable">$nginx</span>)</span><br><span class="line"></span><br><span class="line">NGINX_CONF_FILE=<span class="string">"/opt/nginx/conf/nginx.conf"</span></span><br><span class="line"></span><br><span class="line">[ -f /etc/sysconfig/nginx ] &amp;&amp; . /etc/sysconfig/nginx</span><br><span class="line"></span><br><span class="line">lockfile=/var/lock/subsys/nginx</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">make_dirs</span></span>() &#123;</span><br><span class="line">   <span class="comment"># make required directories</span></span><br><span class="line">   user=`<span class="variable">$nginx</span> -V 2&gt;&amp;1 | grep <span class="string">"configure arguments:.*--user="</span> | sed <span class="string">'s/[^*]*--user=\([^ ]*\).*/\1/g'</span> -`</span><br><span class="line">   <span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$user</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">      <span class="keyword">if</span> [ -z <span class="string">"`grep <span class="variable">$user</span> /etc/passwd`"</span> ]; <span class="keyword">then</span></span><br><span class="line">         useradd -M -s /bin/nologin <span class="variable">$user</span></span><br><span class="line">      <span class="keyword">fi</span></span><br><span class="line">      options=`<span class="variable">$nginx</span> -V 2&gt;&amp;1 | grep <span class="string">'configure arguments:'</span>`</span><br><span class="line">      <span class="keyword">for</span> opt <span class="keyword">in</span> <span class="variable">$options</span>; <span class="keyword">do</span></span><br><span class="line">          <span class="keyword">if</span> [ `<span class="built_in">echo</span> <span class="variable">$opt</span> | grep <span class="string">'.*-temp-path'</span>` ]; <span class="keyword">then</span></span><br><span class="line">              value=`<span class="built_in">echo</span> <span class="variable">$opt</span> | cut -d <span class="string">"="</span> -f 2`</span><br><span class="line">              <span class="keyword">if</span> [ ! -d <span class="string">"<span class="variable">$value</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">                  <span class="comment"># echo "creating" $value</span></span><br><span class="line">                  mkdir -p <span class="variable">$value</span> &amp;&amp; chown -R <span class="variable">$user</span> <span class="variable">$value</span></span><br><span class="line">              <span class="keyword">fi</span></span><br><span class="line">          <span class="keyword">fi</span></span><br><span class="line">       <span class="keyword">done</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">start</span></span>() &#123;</span><br><span class="line">    [ -x <span class="variable">$nginx</span> ] || <span class="built_in">exit</span> 5</span><br><span class="line">    [ -f <span class="variable">$NGINX_CONF_FILE</span> ] || <span class="built_in">exit</span> 6</span><br><span class="line">    make_dirs</span><br><span class="line">    <span class="built_in">echo</span> -n $<span class="string">"Starting <span class="variable">$prog</span>: "</span></span><br><span class="line">    daemon <span class="variable">$nginx</span> -c <span class="variable">$NGINX_CONF_FILE</span></span><br><span class="line">    retval=$?</span><br><span class="line">    <span class="built_in">echo</span></span><br><span class="line">    [ <span class="variable">$retval</span> -eq 0 ] &amp;&amp; touch <span class="variable">$lockfile</span></span><br><span class="line">    <span class="built_in">return</span> <span class="variable">$retval</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">stop</span></span>() &#123;</span><br><span class="line">    <span class="built_in">echo</span> -n $<span class="string">"Stopping <span class="variable">$prog</span>: "</span></span><br><span class="line">    killproc <span class="variable">$prog</span> -QUIT</span><br><span class="line">    retval=$?</span><br><span class="line">    <span class="built_in">echo</span></span><br><span class="line">    [ <span class="variable">$retval</span> -eq 0 ] &amp;&amp; rm -f <span class="variable">$lockfile</span></span><br><span class="line">    <span class="built_in">return</span> <span class="variable">$retval</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">restart</span></span>() &#123;</span><br><span class="line">    configtest || <span class="built_in">return</span> $?</span><br><span class="line">    stop</span><br><span class="line">    sleep 1</span><br><span class="line">    start</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">reload</span></span>() &#123;</span><br><span class="line">    configtest || <span class="built_in">return</span> $?</span><br><span class="line">    <span class="built_in">echo</span> -n $<span class="string">"Reloading <span class="variable">$prog</span>: "</span></span><br><span class="line">    killproc <span class="variable">$nginx</span> -HUP</span><br><span class="line">    RETVAL=$?</span><br><span class="line">    <span class="built_in">echo</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">force_reload</span></span>() &#123;</span><br><span class="line">    restart</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">configtest</span></span>() &#123;</span><br><span class="line">  <span class="variable">$nginx</span> -t -c <span class="variable">$NGINX_CONF_FILE</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">rh_status</span></span>() &#123;</span><br><span class="line">    status <span class="variable">$prog</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">rh_status_q</span></span>() &#123;</span><br><span class="line">    rh_status &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="string">"<span class="variable">$1</span>"</span> <span class="keyword">in</span></span><br><span class="line">    start)</span><br><span class="line">        rh_status_q &amp;&amp; <span class="built_in">exit</span> 0</span><br><span class="line">        <span class="variable">$1</span></span><br><span class="line">        ;;</span><br><span class="line">    stop)</span><br><span class="line">        rh_status_q || <span class="built_in">exit</span> 0</span><br><span class="line">        <span class="variable">$1</span></span><br><span class="line">        ;;</span><br><span class="line">    restart|configtest)</span><br><span class="line">        <span class="variable">$1</span></span><br><span class="line">        ;;</span><br><span class="line">    reload)</span><br><span class="line">        rh_status_q || <span class="built_in">exit</span> 7</span><br><span class="line">        <span class="variable">$1</span></span><br><span class="line">        ;;</span><br><span class="line">    force-reload)</span><br><span class="line">        force_reload</span><br><span class="line">        ;;</span><br><span class="line">    status)</span><br><span class="line">        rh_status</span><br><span class="line">        ;;</span><br><span class="line">    condrestart|try-restart)</span><br><span class="line">        rh_status_q || <span class="built_in">exit</span> 0</span><br><span class="line">            ;;</span><br><span class="line">    *)</span><br><span class="line">        <span class="built_in">echo</span> $<span class="string">"Usage: <span class="variable">$0</span> &#123;start|stop|status|restart|condrestart|try-restart|reload|force-reload|configtest&#125;"</span></span><br><span class="line">        <span class="built_in">exit</span> 2</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></div></figure>
+
+<p>修改文件权限，并加入服务列表</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 修改权限</span></span><br><span class="line">chmod 777 /etc/init.d/nginx </span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加到服务列表</span></span><br><span class="line">chkconfig --add /etc/init.d/nginx</span><br></pre></td></tr></table></div></figure>
+
+<p>设置开机启动</p>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig nginx on</span><br></pre></td></tr></table></div></figure>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://motongxue.github.io">Motongxue</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://motongxue.github.io/posts/3125249672/">https://motongxue.github.io/posts/3125249672/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.github.io/tags/FastDFS/">FastDFS</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.github.io/tags/Linux/">Linux</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://motongxue.github.io/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">文件上传</a></span></div><div class="post-share"><div class="social-share" data-sites="qzone, qq, weibo, wechat, douban, linkedin, facebook, twitter, google">Share to: </div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/posts/2746550019/"><span class="paginator-prev__text">BFS CoVH之再破难关、黑白棋</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Linux下使用FastDFS"><span class="toc-number">1.</span> <span class="toc-text">
+          1.Linux下使用FastDFS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-单节点FastDFS"><span class="toc-number">1.1.</span> <span class="toc-text">
+          1.1.单节点FastDFS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-1-安装gcc"><span class="toc-number">1.1.1.</span> <span class="toc-text">
+          1.1.1.安装gcc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-2-安装libevent"><span class="toc-number">1.1.2.</span> <span class="toc-text">
+          1.1.2.安装libevent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-3-安装libfastcommon-master"><span class="toc-number">1.1.3.</span> <span class="toc-text">
+          1.1.3.安装libfastcommon-master</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-4-安装fastdfs"><span class="toc-number">1.1.4.</span> <span class="toc-text">
+          1.1.4.安装fastdfs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-5-配置并启动tracker服务"><span class="toc-number">1.1.5.</span> <span class="toc-text">
+          1.1.5.配置并启动tracker服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-6-配置并启动storage服务"><span class="toc-number">1.1.6.</span> <span class="toc-text">
+          1.1.6.配置并启动storage服务</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-使用nginx访问FastDFS"><span class="toc-number">2.</span> <span class="toc-text">
+          2.使用nginx访问FastDFS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-为什么需要用Nginx访问？"><span class="toc-number">2.1.</span> <span class="toc-text">
+          2.1.为什么需要用Nginx访问？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-安装fastdfs-nginx-module"><span class="toc-number">2.2.</span> <span class="toc-text">
+          2.2.安装fastdfs-nginx-module</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-解压"><span class="toc-number">2.2.1.</span> <span class="toc-text">
+          2.2.1.解压</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2-修改config"><span class="toc-number">2.2.2.</span> <span class="toc-text">
+          2.2.2.修改config</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-3-配置nginx与FastDFS关联配置文件"><span class="toc-number">2.2.3.</span> <span class="toc-text">
+          2.2.3.配置nginx与FastDFS关联配置文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-安装Nginx的插件"><span class="toc-number">2.3.</span> <span class="toc-text">
+          2.3.安装Nginx的插件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-如果没有安装过nginx"><span class="toc-number">2.3.1.</span> <span class="toc-text">
+          2.3.1.如果没有安装过nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2-如果已经安装过nginx"><span class="toc-number">2.3.2.</span> <span class="toc-text">
+          2.3.2.如果已经安装过nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-3-启动nginx"><span class="toc-number">2.3.3.</span> <span class="toc-text">
+          2.3.3.启动nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-4-设置nginx开机启动"><span class="toc-number">2.3.4.</span> <span class="toc-text">
+          2.3.4.设置nginx开机启动</span></a></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/Motongxue.png" alt="avatar"></div><p class="sidebar-ov-author__text">你来了，要不要坐下来喝杯茶？</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://blog.csdn.net/CrazyMooo" target="_blank" rel="noopener" data-popover="social.csdn" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">csdn</span></a><a class="sidebar-ov-social-item" href="http://wpa.qq.com/msgrd?v=3&amp;uin=393888412&amp;site=qq&amp;menu=yes" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-email"><a class="sidebar-ov-feed-email__link" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=393888412@qq.com" target="_blank" rel="noopener"><span class="sidebar-ov-feed-email__icon"><i class="fas fa-envelope"></i></span><span>Email 订阅</span></a></span></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">16</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">29</div><div class="sidebar-ov-state-item__name">标签</div></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Motongxue</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div><div>我抓不住世间的美好，只好装作万事顺遂的样子</div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><script>function initSearch() {
+  var isXML = true;
+  var search_path = 'search.json';
+
+  if (!search_path) {
+    search_path = 'search.xml';
+  } else if (/json$/i.test(search_path)) {
+    isXML = false;
+  }
+
+  var path = '/' + search_path;
+  $.ajax({
+    url: path,
+    dataType: isXML ? 'xml' : 'json',
+    async: true,
+    success: function (res) {
+      var datas = isXML ? $('entry', res).map(function () {
+        // 将 XML 转为 JSON
+        return {
+          title: $('title', this).text(),
+          content: $('content', this).text(),
+          url: $('url', this).text()
+        };
+      }).get() : res;
+      var $input = $('.search-input input');
+      var $result = $('.search-results');
+      // 搜索对象（标题、内容）的权重，影响显示顺序
+      var WEIGHT = { title: 100, content: 1 };
+      var searchPost = function () {
+        var searchText = $input.val().toLowerCase().trim();
+        // 根据空白字符分隔关键字
+        var keywords = searchText.split(/[\s]+/);
+        // 搜索结果
+        var matchPosts = [];
+
+        // 有多个关键字时，将原文字整个保存下来
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        // 防止未输入字符时搜索
+        if (searchText.length > 0) {
+          datas.forEach(function (data) {
+            var isMatch  = false;
+            // 没有标题的文章使用预设的 i18n 变量代替
+            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
+            var titleLower = title && title.toLowerCase();
+            // 删除 HTML 标签 和 所有空白字符
+            var content = data.content && data.content.replace(/<[^>]+>/g, '');
+            var contentLower = content && content.toLowerCase();
+            // 删除重复的 /
+            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
+            // 标题中匹配到的关键词
+            var titleHitSlice = [];
+            // 内容中匹配到的关键词
+            var contentHitSlice = [];
+
+            keywords.forEach(function (keyword) {
+              /**
+              * 获取匹配的关键词的索引
+              * @param {String} keyword 要匹配的关键字
+              * @param {String} text 原文字
+              * @param {Boolean} caseSensitive 是否区分大小写
+              * @param {Number} weight 匹配对象的权重。权重大的优先显示
+              * @return {Array}
+              */
+              function getIndexByword (word, text, caseSensitive, weight) {
+                if (!word || !text) {
+                  return [];
+                };
+
+                var startIndex = 0; // 每次匹配的开始索引
+                var index = -1;     // 匹配到的索引值
+                var result = [];    // 匹配结果
+
+                if (!caseSensitive) {
+                  word = word.toLowerCase();
+                  text = text.toLowerCase();
+                }
+
+                while((index = text.indexOf(word, startIndex)) !== -1) {
+                  var hasMatch = false;
+                  // 索引位置相同的关键词，保留长度较长的
+                  titleHitSlice.forEach(function (hit) {
+                    if (hit.index === index && hit.word.length < word.length) {
+                      hit.word = word;
+                      hasMatch = true;
+                    }
+                  });
+                  startIndex = index + word.length;
+                  !hasMatch && result.push({ index: index, word: word, weight: weight });
+                }
+                return result;
+              }
+              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
+              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
+            });
+
+            var hitTitle = titleHitSlice.length;
+            var hitContent = contentHitSlice.length;
+
+            if (hitTitle > 0 || hitContent > 0) {
+              isMatch = true;
+            }
+            if (isMatch) {
+              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
+                // 按照匹配文字的索引的递增顺序排序
+                hit.sort(function (left, right) {
+                  return left.index - right.index;
+                });
+              });
+              /**
+              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
+              * @param {String} text 原文本
+              * @param {Array} hitSlice 匹配项的索引信息
+              * @param {Number} start 开始索引
+              * @param {Number} end 结束索引
+              * @return {String}
+              */
+              function highlightKeyword (text, hitSlice, start, end) {
+                if (!text || !hitSlice || !hitSlice.length) {
+                  return;
+                }
+
+                var result = '';
+                var startIndex = start;
+                var endIndex = end;
+                hitSlice.forEach(function (hit) {
+                  if (hit.index < startIndex) {
+                    return;
+                  }
+
+                  var hitWordEnd = hit.index + hit.word.length;
+                  result += text.slice(startIndex, hit.index);
+                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
+                  startIndex = hitWordEnd;
+                });
+                result += text.slice(startIndex, endIndex);
+                return result;
+              }
+
+              var postData = {};
+              // 文章总的搜索权重
+              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
+              // 标记匹配关键词后的标题
+              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
+              // 标记匹配关键词后的内容
+              var postContent;
+              // 显示内容的长度
+              var SHOW_WORD_LENGTH = 200;
+              // 命中关键词前的字符显示长度
+              var SHOW_WORD_FRONT_LENGTH = 20;
+              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+
+              // 截取匹配的第一个字符，前后共 200 个字符来显示
+              if (contentHitSlice.length > 0) {
+                var firstIndex = contentHitSlice[0].index;
+                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
+                var end = firstIndex + SHOW_WORD_END_LENGTH;
+                postContent = highlightKeyword(content, contentHitSlice, start, end);
+              } else { // 未匹配到内容，直接截取前 200 个字符来显示
+                postContent = content.slice(0, SHOW_WORD_LENGTH);
+              }
+              postData.title = postTitle;
+              postData.content = postContent;
+              postData.url = postURL;
+              postData.weight = postWeight;
+              matchPosts.push(postData);
+            }
+          });
+        }
+
+        var resultInnerHtml = '';
+        if (matchPosts.length) {
+          // 按权重递增的顺序排序，使权重大的优先显示
+          matchPosts.sort(function (left, right) {
+            return right.weight - left.weight;
+          });
+          resultInnerHtml += '<ul>';
+          matchPosts.forEach(function (post) {
+            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
+            resultInnerHtml += post.title;
+            resultInnerHtml += '</a><div class="search-results-content">';
+            resultInnerHtml += post.content;
+            resultInnerHtml += '</div></li>';
+          });
+          resultInnerHtml += '</ul>';
+        } else {
+          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
+        }
+        $result.html(resultInnerHtml);
+      };
+      $input.on('input', searchPost);
+      $input.on('keyup', function (e) {
+        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
+          searchPost();
+        }
+      });
+    }
+  });
+}
+
+function closeSearch () {
+  $('body').css({ overflow: 'auto' });
+  $('.search-popup').css({ display: 'none' });
+  $('.search-mask').css({ display: 'none' });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  Stun.utils.pjaxReloadLocalSearch = function () {
+    $('.header-nav-search').on('click', function (e) {
+      e.stopPropagation();
+      $('body').css('overflow', 'hidden');
+      $('.search-popup')
+        .velocity('stop')
+        .velocity('transition.expandIn', {
+          duration: 300,
+          complete: function () {
+            $('.search-popup input').focus();
+          }
+        });
+      $('.search-mask')
+        .velocity('stop')
+        .velocity('transition.fadeIn', {
+          duration: 300
+        });
+
+      initSearch();
+    });
+    $('.search-mask, .search-close').on('click', function () {
+      closeSearch();
+    });
+    $(document).on('keydown', function (e) {
+      // Escape <=> 27
+      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
+        closeSearch();
+      }
+    });
+  };
+
+  Stun.utils.pjaxReloadLocalSearch();
+}, false);</script><script src="https://cdn.jsdelivr.net/npm/pjax@latest/pjax.min.js"></script><script>window.addEventListener('DOMContentLoaded', function () {
+  var pjax = new Pjax({"selectors":["head title","#main",".pjax-reload"],"history":true,"scrollTo":false,"scrollRestoration":false,"cacheBust":false,"debug":false,"currentUrlFullReload":false,"timeout":0});
+  // 加载进度条的计时器
+  var loadingTimer = null;
+
+  // 重置页面 Y 方向上的滚动偏移量
+  document.addEventListener('pjax:send', function () {
+    $('.header-nav-menu').removeClass('show');
+    if (CONFIG.pjax && CONFIG.pjax.avoidBanner) {
+      $('html').velocity('scroll', {
+        duration: 500,
+        offset: $('#header').height(),
+        easing: 'easeInOutCubic'
+      });
+    }
+
+    var loadingBarWidth = 20;
+    var MAX_LOADING_WIDTH = 95;
+
+    $('.loading-bar').addClass('loading');
+    $('.loading-bar__progress').css('width', loadingBarWidth + '%');
+    clearInterval(loadingTimer);
+    loadingTimer = setInterval(function () {
+      loadingBarWidth += 3;
+      if (loadingBarWidth > MAX_LOADING_WIDTH) {
+        loadingBarWidth = MAX_LOADING_WIDTH;
+      }
+      $('.loading-bar__progress').css('width', loadingBarWidth + '%');
+    }, 500);
+  }, false);
+
+  window.addEventListener('pjax:complete', function () {
+    clearInterval(loadingTimer);
+    $('.loading-bar__progress').css('width', '100%');
+    $('.loading-bar').removeClass('loading');
+    setTimeout(function () {
+      $('.loading-bar__progress').css('width', '0');
+    }, 400);
+    $('link[rel=prefetch], script[data-pjax-rm]').each(function () {
+      $(this).remove();
+    });
+    $('script[data-pjax], #pjax-reload script').each(function () {
+      $(this).parent().append($(this).remove());
+    });
+
+    if (Stun.utils.pjaxReloadBoot) {
+      Stun.utils.pjaxReloadBoot();
+    }
+    if (Stun.utils.pjaxReloadScroll) {
+      Stun.utils.pjaxReloadScroll();
+    }
+    if (Stun.utils.pjaxReloadSidebar) {
+      Stun.utils.pjaxReloadSidebar();
+    }
+    if (false) {
+      if (Stun.utils.pjaxReloadHeader) {
+        Stun.utils.pjaxReloadHeader();
+      }
+      if (Stun.utils.pjaxReloadScrollIcon) {
+        Stun.utils.pjaxReloadScrollIcon();
+      }
+      if (Stun.utils.pjaxReloadLocalSearch) {
+        Stun.utils.pjaxReloadLocalSearch();
+      }
+    }
+  }, false);
+}, false);</script><div id="pjax-reload"><script src="https://cdn.jsdelivr.net/npm/quicklink@1.0.1/dist/quicklink.umd.js"></script><script>function initQuicklink() {
+  quicklink({
+    timeout: '10000',
+    priority: 'true',
+    ignores: [uri => uri.includes('#'), uri => uri === 'https://motongxue.github.io/posts/3125249672/', /\/api\/?/,uri => uri.includes('.xml'),uri => uri.includes('.zip'),(uri, el) => el.hasAttribute('nofollow'),(uri, el) => el.hasAttribute('noprefetch')]
+  });
+}
+
+if (true || false) {
+  initQuicklink();
+} else {
+  window.addEventListener('DOMContentLoaded', initQuicklink, false);
+}</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script></div><script src="/js/utils.js?v=2.0.0-rc.0"></script><script src="/js/stun-boot.js?v=2.0.0-rc.0"></script><script src="/js/scroll.js?v=2.0.0-rc.0"></script><script src="/js/header.js?v=2.0.0-rc.0"></script><script src="/js/sidebar.js?v=2.0.0-rc.0"></script></body></html>
