@@ -909,7 +909,7 @@ kbd {
   z-index: 0;
   width: 100%;
   height: 100%;
-  background: url("https://pic1.zhimg.com/v2-24ae9869e03dee51d4ebe9cc6a824264_r.jpg") no-repeat center/cover;
+  background: url("/assets/top-background.jpg") no-repeat center/cover;
 }
 .header-banner-info {
   position: absolute;

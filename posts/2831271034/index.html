@@ -1,0 +1,652 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="renderer" content="webkit"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/Motongxue.png?v=2.0.0-rc.0" type="image/png" sizes="32x32"><meta name="baidu-site-verification" content="&lt;meta name=&quot;baidu-site-verification&quot; content=&quot;7qrvxnH6OF&quot; /&gt;"><meta name="360-site-verification" content="&lt;meta name=&quot;360-site-verification&quot; content=&quot;2c4206decb5f50ba8c3c176299f061a6&quot; /&gt;"><meta name="sogou_site_verification" content="&lt;meta name=&quot;sogou_site_verification&quot; content=&quot;CHFC4tSZrs&quot;/&gt;"><meta name="description" content="1.树组件的用法                           1.1.示例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue 自定义组件用法指南">
+<meta property="og:url" content="https://www.motongxue.cn/posts/2831271034/index.html">
+<meta property="og:site_name" content="Motongxue&#39;s Blog">
+<meta property="og:description" content="1.树组件的用法                           1.1.示例">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/Motongxue/image/raw/master/img/1526003587571.png">
+<meta property="og:image" content="https://gitee.com/Motongxue/image/raw/master/img/1526132984603.png">
+<meta property="og:image" content="https://gitee.com/Motongxue/image/raw/master/img/1526133161647.png">
+<meta property="og:image" content="https://gitee.com/Motongxue/image/raw/master/img/1526135411867.png">
+<meta property="og:image" content="https://gitee.com/Motongxue/image/raw/master/img/1526135369482.png">
+<meta property="og:image" content="https://gitee.com/Motongxue/image/raw/master/img/1526135336908.png">
+<meta property="og:image" content="https://gitee.com/Motongxue/image/raw/master/img/1526296194839.png">
+<meta property="article:published_time" content="2020-05-19T07:11:41.450Z">
+<meta property="article:modified_time" content="2020-05-19T07:18:18.149Z">
+<meta property="article:author" content="Motongxue">
+<meta property="article:tag" content="Vue">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="自定义组件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/Motongxue/image/raw/master/img/1526003587571.png"><meta name="keywords" content="Motongxue, Motongxue's Blog"><meta name="description" content=""><title>Vue 自定义组件用法指南 | Motongxue's Blog</title><link ref="canonical" href="https://www.motongxue.cn/posts/2831271034/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0-rc.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: true,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/MyTech/"><span class="header-nav-menu-item__icon"><i class="fas fa-feather-alt"></i></span><span class="header-nav-menu-item__text">技术</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/MyLife/"><span class="header-nav-menu-item__icon"><i class="fas fa-book"></i></span><span class="header-nav-menu-item__text">生活</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">文章</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/archives/"><span class="header-nav-submenu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-submenu-item__text">归档</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/tags/"><span class="header-nav-submenu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-submenu-item__text">标签</span></a></div></div></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-angle-double-down"></i></span><span class="header-nav-menu-item__text">分类</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Motongxue's Blog</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Vue 自定义组件用法指南</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-05-19</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2020-05-19</span></span><span class="post-meta-item post-meta-item--wordcount"><span class="post-meta-item__icon"><i class="far fa-file-word"></i></span><span class="post-meta-item__info">字数统计</span><span class="post-meta-item__value">1.1k</span></span><span class="post-meta-item post-meta-item--readtime"><span class="post-meta-item__icon"><i class="far fa-clock"></i></span><span class="post-meta-item__info">阅读时长</span><span class="post-meta-item__value">7分</span></span><span class="post-meta-item post-meta-item--visitors"><span class="post-meta-item__icon"><i class="fas fa-eye"></i></span><span class="post-meta-item__info">阅读次数</span><span class="post-meta-item__value" id="busuanzi_value_page_pv"></span></span></div></header><div class="post-body">
+        <h1 id="1-树组件的用法"   >
+          <a href="#1-树组件的用法" class="heading-link"><i class="fas fa-link"></i></a>1.树组件的用法</h1>
+      
+        <h2 id="1-1-示例"   >
+          <a href="#1-1-示例" class="heading-link"><i class="fas fa-link"></i></a>1.1.示例</h2>
+      <a id="more"></a>
+<figure class="highlight html"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">v-tree</span> <span class="attr">url</span>=<span class="string">"/item/category/list"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">:isEdit</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        @<span class="attr">handleAdd</span>=<span class="string">"handleAdd"</span></span></span><br><span class="line"><span class="tag">        @<span class="attr">handleEdit</span>=<span class="string">"handleEdit"</span></span></span><br><span class="line"><span class="tag">        @<span class="attr">handleDelete</span>=<span class="string">"handleDelete"</span></span></span><br><span class="line"><span class="tag">        @<span class="attr">handleClick</span>=<span class="string">"handleClick"</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></div></figure>
+<p>效果：</p>
+<p>
+        <img   class="lazyload lazyload-gif"
+          src="/images/loading.svg" data-src="https://gitee.com/Motongxue/image/raw/master/img/1526003587571.png"  alt="1526003587571">
+      </p>
+
+        <h2 id="1-2-属性列表"   >
+          <a href="#1-2-属性列表" class="heading-link"><i class="fas fa-link"></i></a>1.2.属性列表</h2>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th align="left">属性名称</th>
+<th align="left">说明</th>
+<th align="left">数据类型</th>
+<th align="left">默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">url</td>
+<td align="left">用来加载数据的地址，即延迟加载</td>
+<td align="left">String</td>
+<td align="left">-</td>
+</tr>
+<tr>
+<td align="left">isEdit</td>
+<td align="left">是否开启树的编辑功能</td>
+<td align="left">boolean</td>
+<td align="left">false</td>
+</tr>
+<tr>
+<td align="left">treeData</td>
+<td align="left">整颗树数据，这样就不用远程加载了</td>
+<td align="left">Array</td>
+<td align="left">-</td>
+</tr>
+</tbody></table></div>
+<p>这里推荐使用url进行延迟加载，<strong>每当点击父节点时，就会发起请求，根据父节点id查询子节点信息</strong>。</p>
+<p>当有treeData属性时，就不会触发url加载</p>
+<p>远程请求返回的结果格式：</p>
+<figure class="highlight json"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123; </span><br><span class="line">        <span class="attr">"id"</span>: <span class="number">74</span>,</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"手机"</span>,</span><br><span class="line">        <span class="attr">"parentId"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="attr">"isParent"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">"sort"</span>: <span class="number">2</span></span><br><span class="line">	&#125;,</span><br><span class="line">     &#123; </span><br><span class="line">        <span class="attr">"id"</span>: <span class="number">75</span>,</span><br><span class="line">        <span class="attr">"name"</span>: <span class="string">"家用电器"</span>,</span><br><span class="line">        <span class="attr">"parentId"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="attr">"isParent"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">"sort"</span>: <span class="number">3</span></span><br><span class="line">	&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+
+
+        <h2 id="1-3-事件："   >
+          <a href="#1-3-事件：" class="heading-link"><i class="fas fa-link"></i></a>1.3.事件：</h2>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th align="left">事件名称</th>
+<th align="left">说明</th>
+<th align="left">回调参数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">handleAdd</td>
+<td align="left">新增节点时触发，isEdit为true时有效</td>
+<td align="left">新增节点node对象，包含属性：name、parentId和sort</td>
+</tr>
+<tr>
+<td align="left">handleEdit</td>
+<td align="left">当某个节点被编辑后触发，isEdit为true时有效</td>
+<td align="left">被编辑节点的id和name</td>
+</tr>
+<tr>
+<td align="left">handleDelete</td>
+<td align="left">当删除节点时触发，isEdit为true时有效</td>
+<td align="left">被删除节点的id</td>
+</tr>
+<tr>
+<td align="left">handleClick</td>
+<td align="left">点击某节点时触发</td>
+<td align="left">被点击节点的node对象,包含全部信息</td>
+</tr>
+</tbody></table></div>
+
+        <h2 id="1-4-完整node的信息"   >
+          <a href="#1-4-完整node的信息" class="heading-link"><i class="fas fa-link"></i></a>1.4.完整node的信息</h2>
+      <p>回调函数中返回完整的node节点会包含以下数据：</p>
+<figure class="highlight json"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"id"</span>: <span class="number">76</span>, <span class="comment">// 节点id</span></span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"手机"</span>, <span class="comment">// 节点名称</span></span><br><span class="line">    <span class="attr">"parentId"</span>: <span class="number">75</span>, <span class="comment">// 父节点id</span></span><br><span class="line">    <span class="attr">"isParent"</span>: <span class="literal">false</span>, <span class="comment">// 是否是父节点</span></span><br><span class="line">    <span class="attr">"sort"</span>: <span class="number">1</span>, <span class="comment">// 顺序</span></span><br><span class="line">    <span class="attr">"path"</span>: [<span class="string">"手机"</span>, <span class="string">"手机通讯"</span>, <span class="string">"手机"</span>] <span class="comment">// 所有父节点的名称数组</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+
+
+        <h1 id="2-级联选择组件"   >
+          <a href="#2-级联选择组件" class="heading-link"><i class="fas fa-link"></i></a>2.级联选择组件</h1>
+      
+        <h2 id="2-1-示例："   >
+          <a href="#2-1-示例：" class="heading-link"><i class="fas fa-link"></i></a>2.1.示例：</h2>
+      <figure class="highlight html"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">v-cascader</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">url</span>=<span class="string">"/item/category/list"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">multiple</span> <span class="attr">required</span>    </span></span><br><span class="line"><span class="tag">  <span class="attr">v-model</span>=<span class="string">"brand.categories"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">label</span>=<span class="string">"请选择商品分类"</span>/&gt;</span></span><br></pre></td></tr></table></div></figure>
+
+
+
+
+
+
+        <h2 id="2-2-效果："   >
+          <a href="#2-2-效果：" class="heading-link"><i class="fas fa-link"></i></a>2.2.效果：</h2>
+      <p> 
+        <img   class="lazyload lazyload-gif"
+          src="/images/loading.svg" data-src="https://gitee.com/Motongxue/image/raw/master/img/1526132984603.png"  alt="1526132984603">
+      </p>
+
+        <h2 id="2-3-结果值"   >
+          <a href="#2-3-结果值" class="heading-link"><i class="fas fa-link"></i></a>2.3.结果值</h2>
+      <p><code>v-model</code>绑定的数据结果：</p>
+<p> 
+        <img   class="lazyload lazyload-gif"
+          src="/images/loading.svg" data-src="https://gitee.com/Motongxue/image/raw/master/img/1526133161647.png"  alt="1526133161647">
+      </p>
+
+        <h2 id="2-4-属性列表："   >
+          <a href="#2-4-属性列表：" class="heading-link"><i class="fas fa-link"></i></a>2.4.属性列表：</h2>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>说明</th>
+<th>数据类型</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>url</td>
+<td>延迟加载数据的地址 [{id,name},{}]</td>
+<td>String</td>
+<td>无</td>
+</tr>
+<tr>
+<td>itemText</td>
+<td>每个选项中用来显示的字段名称</td>
+<td>String</td>
+<td>name</td>
+</tr>
+<tr>
+<td>itemValue</td>
+<td>每个选项中用来作为值的字段名称</td>
+<td>String</td>
+<td>id</td>
+</tr>
+<tr>
+<td>children</td>
+<td>子选项数组在父选项中的字段名称</td>
+<td>String</td>
+<td>children</td>
+</tr>
+<tr>
+<td>multiple</td>
+<td>是否允许多选</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>showAllLevels</td>
+<td>是否将级联的每级选项都作为结果展示。当multiple值为true时，这个值无效，即只会显示最后一级选项的结果</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>required</td>
+<td>是否是必填项，如果是，会在文本提示后加*</td>
+<td>boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>rules</td>
+<td>自定义校验规则</td>
+<td>Array</td>
+<td>无</td>
+</tr>
+<tr>
+<td>value</td>
+<td>选择框的结果，可以通过v-model进行双向绑定</td>
+<td>Array</td>
+<td>无</td>
+</tr>
+<tr>
+<td>label</td>
+<td>提示用户的文字说明</td>
+<td>String</td>
+<td>无</td>
+</tr>
+</tbody></table></div>
+
+        <h2 id="2-5-说明："   >
+          <a href="#2-5-说明：" class="heading-link"><i class="fas fa-link"></i></a>2.5.说明：</h2>
+      <p>无论是单选还是多选，value的结果格式始终是一个数组。单选时数组的长度始终为1。</p>
+<p>数组中的对象结构为：</p>
+<figure class="highlight"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &#123;itemValue&#125;:'', // 属性名取决于itemValue的值，默认是id</span><br><span class="line">    &#123;itemText&#125;:''// 属性名取决于itemText的值，默认是name</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+
+
+
+        <h1 id="3-文件上传组件"   >
+          <a href="#3-文件上传组件" class="heading-link"><i class="fas fa-link"></i></a>3.文件上传组件</h1>
+      
+        <h2 id="3-1-示例："   >
+          <a href="#3-1-示例：" class="heading-link"><i class="fas fa-link"></i></a>3.1.示例：</h2>
+      
+        <h3 id="3-1-1-单图片上传："   >
+          <a href="#3-1-1-单图片上传：" class="heading-link"><i class="fas fa-link"></i></a>3.1.1.单图片上传：</h3>
+      <figure class="highlight html"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">v-upload</span></span></span><br><span class="line"><span class="tag">          <span class="attr">v-model</span>=<span class="string">"brand.image"</span> </span></span><br><span class="line"><span class="tag">          <span class="attr">url</span>=<span class="string">"/item/upload"</span> </span></span><br><span class="line"><span class="tag">          <span class="attr">:multiple</span>=<span class="string">"false"</span> </span></span><br><span class="line"><span class="tag">          <span class="attr">:pic-width</span>=<span class="string">"150"</span> </span></span><br><span class="line"><span class="tag">          <span class="attr">:pic-height</span>=<span class="string">"150"</span></span></span><br><span class="line"><span class="tag">          /&gt;</span></span><br></pre></td></tr></table></div></figure>
+
+<p>上传前：</p>
+<p> 
+        <img   class="lazyload lazyload-gif"
+          src="/images/loading.svg" data-src="https://gitee.com/Motongxue/image/raw/master/img/1526135411867.png"  alt="1526135411867">
+      </p>
+<p>上传后：</p>
+<p> 
+        <img   class="lazyload lazyload-gif"
+          src="/images/loading.svg" data-src="https://gitee.com/Motongxue/image/raw/master/img/1526135369482.png"  alt="1526135369482">
+      </p>
+
+        <h3 id="3-1-2-多图片上传"   >
+          <a href="#3-1-2-多图片上传" class="heading-link"><i class="fas fa-link"></i></a>3.1.2.多图片上传</h3>
+      <p>示例：</p>
+<figure class="highlight html"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">v-upload</span></span></span><br><span class="line"><span class="tag">          <span class="attr">v-model</span>=<span class="string">"brand.image"</span> </span></span><br><span class="line"><span class="tag">          <span class="attr">url</span>=<span class="string">"/item/upload"</span></span></span><br><span class="line"><span class="tag">          /&gt;</span></span><br></pre></td></tr></table></div></figure>
+
+<p>效果：</p>
+<p> 
+        <img   class="lazyload lazyload-gif"
+          src="/images/loading.svg" data-src="https://gitee.com/Motongxue/image/raw/master/img/1526135336908.png"  alt="1526135336908">
+      </p>
+
+        <h2 id="3-2-属性列表："   >
+          <a href="#3-2-属性列表：" class="heading-link"><i class="fas fa-link"></i></a>3.2.属性列表：</h2>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>说明</th>
+<th>数据类型</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>url</td>
+<td>上传文件的目标路径</td>
+<td>String</td>
+<td>无</td>
+</tr>
+<tr>
+<td>value</td>
+<td>上传成功的返回结果</td>
+<td>单图片上传是String。多图片上传是String数组</td>
+<td>无</td>
+</tr>
+<tr>
+<td>multiple</td>
+<td>是否运行多图片上传</td>
+<td>Boolean</td>
+<td>true</td>
+</tr>
+<tr>
+<td>picWidth</td>
+<td>单图片上传后的预览宽度</td>
+<td>Number</td>
+<td>150</td>
+</tr>
+<tr>
+<td>picHeight</td>
+<td>单图片上传后的预览高度</td>
+<td>Number</td>
+<td>150</td>
+</tr>
+</tbody></table></div>
+
+        <h2 id="3-3-说明"   >
+          <a href="#3-3-说明" class="heading-link"><i class="fas fa-link"></i></a>3.3.说明</h2>
+      <p>可以通过v-model双向绑定，来获取图片上传的结果：</p>
+<ul>
+<li>单图片上传时，value值是一个图片地址</li>
+<li>多图片上传时，value值是一个图片地址数组</li>
+<li>文件上传的参数名是：file</li>
+<li>文件上传的返回值，就是图片的url路径</li>
+</ul>
+
+        <h1 id="4-自定义富文本编辑器"   >
+          <a href="#4-自定义富文本编辑器" class="heading-link"><i class="fas fa-link"></i></a>4.自定义富文本编辑器</h1>
+      
+        <h2 id="4-1-示例："   >
+          <a href="#4-1-示例：" class="heading-link"><i class="fas fa-link"></i></a>4.1.示例：</h2>
+      <figure class="highlight html"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">v-editor</span> <span class="attr">v-model</span>=<span class="string">"goods.spuDetail.description"</span> <span class="attr">upload-url</span>=<span class="string">"/upload/image"</span> <span class="attr">fileName</span>=<span class="string">"file"</span>/&gt;</span></span><br></pre></td></tr></table></div></figure>
+
+
+        <h2 id="4-2-效果："   >
+          <a href="#4-2-效果：" class="heading-link"><i class="fas fa-link"></i></a>4.2.效果：</h2>
+      <p> 
+        <img   class="lazyload lazyload-gif"
+          src="/images/loading.svg" data-src="https://gitee.com/Motongxue/image/raw/master/img/1526296194839.png"  alt="1526296194839">
+      </p>
+
+        <h2 id="4-3-属性说明"   >
+          <a href="#4-3-属性说明" class="heading-link"><i class="fas fa-link"></i></a>4.3.属性说明</h2>
+      <p>属性列表：</p>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th>属性名</th>
+<th>说明</th>
+<th>数据类型</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>value</td>
+<td>编辑器的输出结果，可以用v-model双向绑定</td>
+<td>String</td>
+<td>无</td>
+</tr>
+<tr>
+<td>upload-url</td>
+<td>上传按钮对应的图片上传地址，以项目全局的url配置为前缀</td>
+<td>String</td>
+<td>无</td>
+</tr>
+<tr>
+<td>file-name</td>
+<td>上传文件的参数名</td>
+<td>String</td>
+<td>file</td>
+</tr>
+<tr>
+<td>maxUploadSize</td>
+<td>上传文件的大小限制，单位byte</td>
+<td>Number</td>
+<td>500kb</td>
+</tr>
+</tbody></table></div>
+<p>备注：</p>
+<p>默认支持的图片类型：jpg/png/jpeg/gif</p>
+<hr>
+<p><strong>2020年5月19日更</strong></p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://www.motongxue.cn">Motongxue</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://www.motongxue.cn/posts/2831271034/">https://www.motongxue.cn/posts/2831271034/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://www.motongxue.cn/tags/Vue/">Vue</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://www.motongxue.cn/tags/%E5%89%8D%E7%AB%AF/">前端</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://www.motongxue.cn/tags/%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6/">自定义组件</a></span></div><div class="post-share"><div class="social-share" data-sites="qzone, qq, weibo, wechat, douban, linkedin, facebook, twitter, google">Share to: </div></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/posts/853085640/"><span class="paginator-prev__text">Java JDK8新特性</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-树组件的用法"><span class="toc-number">1.</span> <span class="toc-text">
+          1.树组件的用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-示例"><span class="toc-number">1.1.</span> <span class="toc-text">
+          1.1.示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-属性列表"><span class="toc-number">1.2.</span> <span class="toc-text">
+          1.2.属性列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-事件："><span class="toc-number">1.3.</span> <span class="toc-text">
+          1.3.事件：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-完整node的信息"><span class="toc-number">1.4.</span> <span class="toc-text">
+          1.4.完整node的信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-级联选择组件"><span class="toc-number">2.</span> <span class="toc-text">
+          2.级联选择组件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-示例："><span class="toc-number">2.1.</span> <span class="toc-text">
+          2.1.示例：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-效果："><span class="toc-number">2.2.</span> <span class="toc-text">
+          2.2.效果：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-结果值"><span class="toc-number">2.3.</span> <span class="toc-text">
+          2.3.结果值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-属性列表："><span class="toc-number">2.4.</span> <span class="toc-text">
+          2.4.属性列表：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-说明："><span class="toc-number">2.5.</span> <span class="toc-text">
+          2.5.说明：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-文件上传组件"><span class="toc-number">3.</span> <span class="toc-text">
+          3.文件上传组件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-示例："><span class="toc-number">3.1.</span> <span class="toc-text">
+          3.1.示例：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-单图片上传："><span class="toc-number">3.1.1.</span> <span class="toc-text">
+          3.1.1.单图片上传：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-2-多图片上传"><span class="toc-number">3.1.2.</span> <span class="toc-text">
+          3.1.2.多图片上传</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-属性列表："><span class="toc-number">3.2.</span> <span class="toc-text">
+          3.2.属性列表：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-说明"><span class="toc-number">3.3.</span> <span class="toc-text">
+          3.3.说明</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-自定义富文本编辑器"><span class="toc-number">4.</span> <span class="toc-text">
+          4.自定义富文本编辑器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-示例："><span class="toc-number">4.1.</span> <span class="toc-text">
+          4.1.示例：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-效果："><span class="toc-number">4.2.</span> <span class="toc-text">
+          4.2.效果：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-属性说明"><span class="toc-number">4.3.</span> <span class="toc-text">
+          4.3.属性说明</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/Motongxue.png" alt="avatar"></div><p class="sidebar-ov-author__text">欢迎访问：motongxue.cn</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://blog.csdn.net/CrazyMooo" target="_blank" rel="noopener" data-popover="social.csdn" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">csdn</span></a><a class="sidebar-ov-social-item" href="http://wpa.qq.com/msgrd?v=3&amp;uin=393888412&amp;site=qq&amp;menu=yes" target="_blank" rel="noopener" data-popover="QQ" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-qq"></i></span></a></div><div class="sidebar-ov-feed"><span class="sidebar-ov-feed-email"><a class="sidebar-ov-feed-email__link" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&amp;email=393888412@qq.com" target="_blank" rel="noopener"><span class="sidebar-ov-feed-email__icon"><i class="fas fa-envelope"></i></span><span>Email 发送邮件</span></a></span></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">18</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">34</div><div class="sidebar-ov-state-item__name">标签</div></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Motongxue</span></div><div class="busuanzi"><span class="busuanzi-siteuv"><span class="busuanzi-siteuv__icon"><i class="fas fa-user"></i></span><span class="busuanzi-siteuv__info">访问人数</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_uv"></span></span><span class="busuanzi-sitepv"><span class="busuanzi-siteuv__icon"><i class="fas fa-eye"></i></span><span class="busuanzi-siteuv__info">浏览总量</span><span class="busuanzi-siteuv__value" id="busuanzi_value_site_pv"></span></span></div><div>我抓不住世间的美好，只好装作万事顺遂的样子</div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.min.js"></script><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><script>function initSearch() {
+  var isXML = true;
+  var search_path = 'search.json';
+
+  if (!search_path) {
+    search_path = 'search.xml';
+  } else if (/json$/i.test(search_path)) {
+    isXML = false;
+  }
+
+  var path = '/' + search_path;
+  $.ajax({
+    url: path,
+    dataType: isXML ? 'xml' : 'json',
+    async: true,
+    success: function (res) {
+      var datas = isXML ? $('entry', res).map(function () {
+        // 将 XML 转为 JSON
+        return {
+          title: $('title', this).text(),
+          content: $('content', this).text(),
+          url: $('url', this).text()
+        };
+      }).get() : res;
+      var $input = $('.search-input input');
+      var $result = $('.search-results');
+      // 搜索对象（标题、内容）的权重，影响显示顺序
+      var WEIGHT = { title: 100, content: 1 };
+      var searchPost = function () {
+        var searchText = $input.val().toLowerCase().trim();
+        // 根据空白字符分隔关键字
+        var keywords = searchText.split(/[\s]+/);
+        // 搜索结果
+        var matchPosts = [];
+
+        // 有多个关键字时，将原文字整个保存下来
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        // 防止未输入字符时搜索
+        if (searchText.length > 0) {
+          datas.forEach(function (data) {
+            var isMatch  = false;
+            // 没有标题的文章使用预设的 i18n 变量代替
+            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
+            var titleLower = title && title.toLowerCase();
+            // 删除 HTML 标签 和 所有空白字符
+            var content = data.content && data.content.replace(/<[^>]+>/g, '');
+            var contentLower = content && content.toLowerCase();
+            // 删除重复的 /
+            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
+            // 标题中匹配到的关键词
+            var titleHitSlice = [];
+            // 内容中匹配到的关键词
+            var contentHitSlice = [];
+
+            keywords.forEach(function (keyword) {
+              /**
+              * 获取匹配的关键词的索引
+              * @param {String} keyword 要匹配的关键字
+              * @param {String} text 原文字
+              * @param {Boolean} caseSensitive 是否区分大小写
+              * @param {Number} weight 匹配对象的权重。权重大的优先显示
+              * @return {Array}
+              */
+              function getIndexByword (word, text, caseSensitive, weight) {
+                if (!word || !text) {
+                  return [];
+                };
+
+                var startIndex = 0; // 每次匹配的开始索引
+                var index = -1;     // 匹配到的索引值
+                var result = [];    // 匹配结果
+
+                if (!caseSensitive) {
+                  word = word.toLowerCase();
+                  text = text.toLowerCase();
+                }
+
+                while((index = text.indexOf(word, startIndex)) !== -1) {
+                  var hasMatch = false;
+                  // 索引位置相同的关键词，保留长度较长的
+                  titleHitSlice.forEach(function (hit) {
+                    if (hit.index === index && hit.word.length < word.length) {
+                      hit.word = word;
+                      hasMatch = true;
+                    }
+                  });
+                  startIndex = index + word.length;
+                  !hasMatch && result.push({ index: index, word: word, weight: weight });
+                }
+                return result;
+              }
+              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
+              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
+            });
+
+            var hitTitle = titleHitSlice.length;
+            var hitContent = contentHitSlice.length;
+
+            if (hitTitle > 0 || hitContent > 0) {
+              isMatch = true;
+            }
+            if (isMatch) {
+              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
+                // 按照匹配文字的索引的递增顺序排序
+                hit.sort(function (left, right) {
+                  return left.index - right.index;
+                });
+              });
+              /**
+              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
+              * @param {String} text 原文本
+              * @param {Array} hitSlice 匹配项的索引信息
+              * @param {Number} start 开始索引
+              * @param {Number} end 结束索引
+              * @return {String}
+              */
+              function highlightKeyword (text, hitSlice, start, end) {
+                if (!text || !hitSlice || !hitSlice.length) {
+                  return;
+                }
+
+                var result = '';
+                var startIndex = start;
+                var endIndex = end;
+                hitSlice.forEach(function (hit) {
+                  if (hit.index < startIndex) {
+                    return;
+                  }
+
+                  var hitWordEnd = hit.index + hit.word.length;
+                  result += text.slice(startIndex, hit.index);
+                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
+                  startIndex = hitWordEnd;
+                });
+                result += text.slice(startIndex, endIndex);
+                return result;
+              }
+
+              var postData = {};
+              // 文章总的搜索权重
+              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
+              // 标记匹配关键词后的标题
+              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
+              // 标记匹配关键词后的内容
+              var postContent;
+              // 显示内容的长度
+              var SHOW_WORD_LENGTH = 200;
+              // 命中关键词前的字符显示长度
+              var SHOW_WORD_FRONT_LENGTH = 20;
+              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+
+              // 截取匹配的第一个字符，前后共 200 个字符来显示
+              if (contentHitSlice.length > 0) {
+                var firstIndex = contentHitSlice[0].index;
+                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
+                var end = firstIndex + SHOW_WORD_END_LENGTH;
+                postContent = highlightKeyword(content, contentHitSlice, start, end);
+              } else { // 未匹配到内容，直接截取前 200 个字符来显示
+                postContent = content.slice(0, SHOW_WORD_LENGTH);
+              }
+              postData.title = postTitle;
+              postData.content = postContent;
+              postData.url = postURL;
+              postData.weight = postWeight;
+              matchPosts.push(postData);
+            }
+          });
+        }
+
+        var resultInnerHtml = '';
+        if (matchPosts.length) {
+          // 按权重递增的顺序排序，使权重大的优先显示
+          matchPosts.sort(function (left, right) {
+            return right.weight - left.weight;
+          });
+          resultInnerHtml += '<ul>';
+          matchPosts.forEach(function (post) {
+            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
+            resultInnerHtml += post.title;
+            resultInnerHtml += '</a><div class="search-results-content">';
+            resultInnerHtml += post.content;
+            resultInnerHtml += '</div></li>';
+          });
+          resultInnerHtml += '</ul>';
+        } else {
+          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
+        }
+        $result.html(resultInnerHtml);
+      };
+      $input.on('input', searchPost);
+      $input.on('keyup', function (e) {
+        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
+          searchPost();
+        }
+      });
+    }
+  });
+}
+
+function closeSearch () {
+  $('body').css({ overflow: 'auto' });
+  $('.search-popup').css({ display: 'none' });
+  $('.search-mask').css({ display: 'none' });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  Stun.utils.pjaxReloadLocalSearch = function () {
+    $('.header-nav-search').on('click', function (e) {
+      e.stopPropagation();
+      $('body').css('overflow', 'hidden');
+      $('.search-popup')
+        .velocity('stop')
+        .velocity('transition.expandIn', {
+          duration: 300,
+          complete: function () {
+            $('.search-popup input').focus();
+          }
+        });
+      $('.search-mask')
+        .velocity('stop')
+        .velocity('transition.fadeIn', {
+          duration: 300
+        });
+
+      initSearch();
+    });
+    $('.search-mask, .search-close').on('click', function () {
+      closeSearch();
+    });
+    $(document).on('keydown', function (e) {
+      // Escape <=> 27
+      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
+        closeSearch();
+      }
+    });
+  };
+
+  Stun.utils.pjaxReloadLocalSearch();
+}, false);</script><script src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@latest/bsz.pure.mini.js" async></script><script src="/js/utils.js?v=2.0.0-rc.0"></script><script src="/js/stun-boot.js?v=2.0.0-rc.0"></script><script src="/js/scroll.js?v=2.0.0-rc.0"></script><script src="/js/header.js?v=2.0.0-rc.0"></script><script src="/js/sidebar.js?v=2.0.0-rc.0"></script></body></html>
